@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 music21 = "*"
+matplotlib = "*"
+numpy = "*"
 
 [dev-packages]
 

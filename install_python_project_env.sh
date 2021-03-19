@@ -47,6 +47,8 @@ else
 
   ### Begin aanpassen ###
   pipenv install music21
+  pipenv install matplotlib
+  pipenv install numpy
   ## Einde aanpassen ###
 
   # Toon geinstalleerde modules 
