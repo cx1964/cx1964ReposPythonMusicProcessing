@@ -24,4 +24,7 @@ env['musicxmlPath'] = '/home/claude/Applications/'+musescoreProg
 
 myScore = m.converter.parse(scorePath+'/'+museScoreFile, format='musicxml')
 print("type(myScore):", type(myScore))
+# parse Stream structure of musicfile 
+for thing in myScore:
+    print(thing)
 #myScore.show()  
