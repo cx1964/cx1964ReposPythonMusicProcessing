@@ -27,4 +27,8 @@ print("type(myScore):", type(myScore))
 # parse Stream structure of musicfile 
 for thing in myScore:
     print(thing)
+# Alternative
+myScore.show('text')      
+
+# load sheetmusic in musescore
 #myScore.show()  
