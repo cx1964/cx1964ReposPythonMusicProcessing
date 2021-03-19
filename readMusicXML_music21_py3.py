@@ -23,4 +23,5 @@ env['autoDownload'] = 'allow'
 env['musicxmlPath'] = '/home/claude/Applications/'+musescoreProg
 
 myScore = m.converter.parse(scorePath+'/'+museScoreFile, format='musicxml')
-myScore.show()  
+print("type(myScore):", type(myScore))
+#myScore.show()  
