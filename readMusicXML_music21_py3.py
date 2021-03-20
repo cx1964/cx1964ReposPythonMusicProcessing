@@ -107,6 +107,11 @@ for e3 in myScore3.recurse().notes:
           ,"        "
           ,e3.fullName
           ,e3.activeSite)
+# ToDo
+# 1. add NoteDuration 
+# 2. create X array (Measure, Note offset in Measure) Y array (Notevalue, Ocatve, NoteDuration )
+
+
 
 #ToDo plot the  data to viualize the data
     
