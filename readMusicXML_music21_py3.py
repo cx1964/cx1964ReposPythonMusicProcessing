@@ -82,6 +82,8 @@ for e in myScore.recurse().notes:
     # ToDo
     # To prepare for AI convert NoteName to numeric Value with function getNoteValue
 
-
+#ToDo plot the  data to viualize the data
+    
+    
 # load sheetmusic in musescore
 #myScore.show()  
