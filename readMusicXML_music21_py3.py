@@ -102,11 +102,12 @@ for e3 in myScore3.recurse().notes:
     print(  "Measure:", e3.measureNumber
           ,"Note Offset in Measure:", e3.offset
           ,"Note:", e3.name
-          ,"Notevalue:", getNoteValue(e3.name)
           ,"Octave:", e3.octave
-          ,"        "
-          ,e3.fullName
-          ,e3.activeSite)
+          ,e3.nameWithOctave
+          ,"Notevalue:", getNoteValue(e3.name)
+          ,"Note duration:", e3.duration.type
+          ,"Note quarterlength:", e3.duration.quarterLength
+    )
 # ToDo
 # 1. add NoteDuration 
 # 2. create X array (Measure, Note offset in Measure) Y array (Notevalue, Ocatve, NoteDuration )
