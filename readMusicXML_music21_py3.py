@@ -92,15 +92,22 @@ for e in myScore.recurse().notes:
 print("\n\n")
 for e2 in myScore2.recurse().notes:
     #print(e)
-    print(e2.offset,e2.name, e2.octave, e2.fullName, e2.activeSite, "notevalue:", getNoteValue(e2.name))
+    print(e2.offset,e2.name, e2.octave, e2.fullName, e2.activeSite, "Notevalue:", getNoteValue(e2.name))
     #print(e.fullName)
 
 
 print("\n\n")
 for e3 in myScore3.recurse().notes:
     #print(e)
-    print(e3.offset, e3.name, e3.octave, e3.fullName, e3.activeSite, "notevalue:", getNoteValue(e3.name))
-    #print(e.fullName)
+    print(  "Measure:", e3.measureNumber
+          ,"Note Offset in Measure:", e3.offset
+          ,"Note:", e3.name
+          ,"Notevalue:", getNoteValue(e3.name)
+          ,"Octave:", e3.octave
+          ,"        "
+          ,e3.fullName
+          ,e3.activeSite)
+
 #ToDo plot the  data to viualize the data
     
     
