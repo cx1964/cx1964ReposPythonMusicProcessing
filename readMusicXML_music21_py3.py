@@ -69,6 +69,12 @@ myScore3 = m.converter.parse(scorePath+'/'+museScoreFile3, format='musicxml')
 # Alternative
 #myScore.show('text')      
 
+
+time_list = []
+print(time_list)
+
+note_property_list=[]
+
 # https://web.mit.edu/music21/doc/usersGuide/usersGuide_06_stream2.html
 for e in myScore.recurse():
     #print(e)
@@ -108,6 +114,15 @@ for e3 in myScore3.recurse().notes:
           ,"Note duration:", e3.duration.type
           ,"Note quarterlength:", e3.duration.quarterLength
     )
+    # Fill time
+    time_list.append(e3.measureNumber)      
+    time_list.append(e3.offset) 
+    print("Time_list iter:", time_list)
+    # File note properties
+    note_property_list.append(e3.name)
+    #note_property_list.append(e3.name)
+    print(".... nog teoveogen hier overige properies")
+    print("note_property_list:", note_property_list)
 # ToDo
 # 1. add NoteDuration 
 # 2. create X array (Measure, Note offset in Measure) Y array (Notevalue, Ocatve, NoteDuration )
