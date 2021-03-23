@@ -25,7 +25,7 @@ def getNoteValue(noteName):
                    # append all double sharps
                    # append all double flats
                  }
-    return(noteValues[noteName])
+    return(noteValues[noteName.upper()])
 
 
 def getNoteName(noteValue, enharmonic=False):
