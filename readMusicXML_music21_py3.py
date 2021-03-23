@@ -4,6 +4,7 @@
 # 
 
 import music21 as m
+import numpy as np
 
 musescoreProg='MuseScore-3.6.2.548021370-x86_64_461d9f78f967c0640433c95ccb200785.AppImage'
 scorePath = "/home/claude/Documents/sources/python/python3/cx1964ReposPythonMusicProcessing"
@@ -40,11 +41,11 @@ def getNoteValue(noteName):
 #ToDo
 # Create a Function which convert NoteValue to NoteName
 
-
-print("noteValues['C#']",getNoteValue('C#'))
-ns='D#'
-print("noteValues['"+ns+"']",getNoteValue(ns))
-print("\n\n")
+# Test conversion Note to noteValue
+#print("noteValues['C#']",getNoteValue('C#'))
+#ns='D#'
+#print("noteValues['"+ns+"']",getNoteValue(ns))
+#print("\n\n")
 
 # See: https://web.mit.edu/music21/doc/usersGuide/usersGuide_24_environment.html#usersguide-24-environment
 # See: https://web.mit.edu/music21/doc/usersGuide/usersGuide_24_environment.html
@@ -62,30 +63,28 @@ myScore2 = m.converter.parse(scorePath+'/'+museScoreFile2, format='musicxml')
 myScore3 = m.converter.parse(scorePath+'/'+museScoreFile3, format='musicxml')
 #print("type(myScore):", type(myScore))
 
+
+
+time_list = []
+note_property_list=[]
+
 # parse Stream structure of musicfile 
 #for thing in myScore:
 #    print(thing)
 
 # Alternative
-#myScore.show('text')      
-
-
-time_list = []
-print(time_list)
-
-note_property_list=[]
+#myScore.show('text')  
 
 # https://web.mit.edu/music21/doc/usersGuide/usersGuide_06_stream2.html
+'''
 for e in myScore.recurse():
     #print(e)
     print(e.offset, e, e.activeSite)
 print("\n\n")
+'''
 
-
-print("ToDo:")
-print("Use code below to prepare Notes for AI Neuralnetwork")
-print("Create vectors (<measure 1>, <offset 1>, <notevalue 1>), (<measure 2>, <offset 2>, <notevalue 2>) .. (<measure i>, <offset i>, <notevalue i>) to feed to neuralnetwork")
 # https://web.mit.edu/music21/doc/usersGuide/usersGuide_06_stream2.html
+'''
 # get the notes
 for e in myScore.recurse().notes:
     #print(e)
@@ -94,37 +93,53 @@ for e in myScore.recurse().notes:
 
     # ToDo
     # To prepare for AI convert NoteName to numeric Value with function getNoteValue
+'''
 
+'''
 print("\n\n")
 for e2 in myScore2.recurse().notes:
-    #print(e)
+    #print(e2)
     print(e2.offset,e2.name, e2.octave, e2.fullName, e2.activeSite, "Notevalue:", getNoteValue(e2.name))
     #print(e.fullName)
-
+'''
 
 print("\n\n")
 for e3 in myScore3.recurse().notes:
-    #print(e)
-    print(  "Measure:", e3.measureNumber
-          ,"Note Offset in Measure:", e3.offset
-          ,"Note:", e3.name
-          ,"Octave:", e3.octave
-          ,e3.nameWithOctave
-          ,"Notevalue:", getNoteValue(e3.name)
-          ,"Note duration:", e3.duration.type
-          ,"Note quarterlength:", e3.duration.quarterLength
-    )
+    #print(e3)
+    #print(  "Measure:", e3.measureNumber
+    #      ,"Note Offset in Measure:", e3.offset
+    #      ,"Note:", e3.name
+    #      ,"Octave:", e3.octave
+    #      ,e3.nameWithOctave
+    #      ,"Notevalue:", getNoteValue(e3.name)
+    #      ,"Note duration:", e3.duration.type
+    #      ,"Note quarterlength:", e3.duration.quarterLength
+    #)
+
     # Fill time
     time_list.append(e3.measureNumber)      
     time_list.append(e3.offset) 
-    print("Time_list iter:", time_list)
+    #print("Time_list iter:", time_list)
+
     # File note properties
     note_property_list.append(e3.name)
-    #note_property_list.append(e3.name)
-    print(".... nog teoveogen hier overige properies")
-    print("note_property_list:", note_property_list)
+    note_property_list.append(e3.octave)
+    note_property_list.append(e3.duration.quarterLength)
+    #print("Note_property_list iter:", note_property_list)
+
+# Create 2 dimensional array for the time list with 2 elements per row
+# First index -1 creates dynamically an amount off rows based on the size of the time list
+X = np.array(time_list).reshape(-1, 2)
+print("X.shape",X.shape)
+print(X)
+
+# Create 2 dimension array for the note property list with 3 elements per row
+# First index -1 creates dynamically an amount off rows based on the size of the note list
+Y = np.array(note_property_list).reshape(-1, 3)
+print("Y.shape",Y.shape)
+print(Y)
+
 # ToDo
-# 1. add NoteDuration 
 # 2. create X array (Measure, Note offset in Measure) Y array (Notevalue, Ocatve, NoteDuration )
 
 
