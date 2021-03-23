@@ -25,27 +25,73 @@ def getNoteValue(noteName):
                    'D' : 2, 'C##': 2,
                    'D#': 3, 'Eb' : 3,
                    'E' : 4,
-                   'F' : 6, 'E#' : 6,
-                   'F#': 7, 'G-' : 7,
-                   'G' : 8, 'F##': 8,
-                   'G#': 9, 'A-' : 9,
-                   'A' :10, 'B--': 10,
-                   'A#':11, 'B-' :11,
-                   'B' :12, 'C-' :12
+
+                   'F' : 5, 'E#' : 5,
+                   'F#': 6, 'G-' : 6,
+                   'G' : 7, 'F##': 7,
+                   'G#': 8, 'A-' : 8,
+                   'A' : 9, 'B--': 9,
+                   'A#':10, 'B-' :10,
+                   'B' :11, 'C-' :11
                    # ToDo
                    # append all double sharps
                    # append all double flats
                  }
     return(noteValues[noteName])
 
-#ToDo
-# Create a Function which convert NoteValue to NoteName
+
+def getNoteName(noteValue, enharmonic=False):
+    # Convert a NoteValue in a string with a noteName
+    # In music a flat is notated as -
+    # Bb = B-
+    if enharmonic==False:
+        noteName = { 
+                     0: 'C' ,  
+                     1: 'C#',  
+                     2: 'D' , 
+                     3: 'D#', 
+                     4: 'E' ,
+                     5: 'F' , 
+                     6: 'F#', 
+                     7: 'G' , 
+                     8: 'G#', 
+                     9: 'A' , 
+                    10: 'A#', 
+                    11: 'B'  
+                   }
+    else:
+        noteName = { 
+                     0: 'B-' ,
+                     1: 'D-' ,
+                     2: 'C##',
+                     3: 'Eb' ,
+                     4: 'E'  , # because no enharmonic available. x =def enharmonic(x)
+                     5: 'E#' ,
+                     6: 'G-' ,
+                     7: 'F##',
+                     8: 'A-' ,
+                     9: 'B--',
+                    10: 'B-' ,
+                    11: 'C-' 
+                   # ToDo
+                   # append all double sharps
+                   # append all double flats
+                   }                 
+    return(noteName[noteValue])
+
 
 # Test conversion Note to noteValue
 #print("noteValues['C#']",getNoteValue('C#'))
 #ns='D#'
 #print("noteValues['"+ns+"']",getNoteValue(ns))
 #print("\n\n")
+# Test conversion noteValue to Note
+#for v in range(0,12,1):
+#  n=getNoteName(v, enharmonic=False)
+#  print(v,n)
+#  n=getNoteName(v, enharmonic=True)
+#  print(v,n)
+
 
 # See: https://web.mit.edu/music21/doc/usersGuide/usersGuide_24_environment.html#usersguide-24-environment
 # See: https://web.mit.edu/music21/doc/usersGuide/usersGuide_24_environment.html
