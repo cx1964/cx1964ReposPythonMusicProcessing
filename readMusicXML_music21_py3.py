@@ -20,8 +20,8 @@ keyCmin = m.key.Key('c') #  lowercase = c minor. uppercase = C major
 
 
 # Test conversion Note to noteValue
-print("noteValues['C#']",nc.getNoteValue('C#'))
-print("noteValues['c#']",nc.getNoteValue('c#'))
+# print("noteValues['C#']",nc.getNoteValue('C#'))
+# print("noteValues['c#']",nc.getNoteValue('c#'))
 #ns='d#'
 #print("noteValues['"+ns+"']",nc.getNoteValue(ns))
 #print("\n\n")
