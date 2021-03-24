@@ -50,6 +50,7 @@ else
   pipenv install matplotlib
   pipenv install numpy
   pipenv install pytest
+  pipenv install sklearn
   ## Einde aanpassen ###
 
   # Toon geinstalleerde modules 
