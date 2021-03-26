@@ -17,9 +17,6 @@ scorePath = "/home/claude/Documents/sources/python/python3/cx1964ReposPythonMusi
 museScoreFile  = "C_major_scale_ascending.musicxml" # in musicxml uncompressed
 museScoreFile2 = "F_major_scale_ascending_8th_notes.musicxml" # in musicxml uncompressed
 museScoreFile3 = "C_major_scale_ascending_mixed_duration.musicxml" # in musicxml uncompressed
-keyC    = m.key.Key('C') #  lowercase = c minor. uppercase = C major
-keyCmin = m.key.Key('c') #  lowercase = c minor. uppercase = C major
-
 
 
 
@@ -148,7 +145,7 @@ from sklearn.linear_model import LinearRegression
 
 
 # Step 3: Create a model and fit it
-m = LinearRegression()
+mdl = LinearRegression()
 # This statement creates the variable model as the instance of LinearRegression.
 # You can provide several optional parameters to LinearRegression:
 #
@@ -165,7 +162,7 @@ m = LinearRegression()
 # This example uses the default values of all parameters.
 #
 # It’s time to start using the model. First, you need to call .fit() on model:
-model = m.fit(X, Y)
+model = mdl.fit(X, Y)
 
 # Step 4: Get results
 r_sq = model.score(X, Y)
@@ -240,12 +237,29 @@ for r in y_pred:
 
 # ToDo
 # rebuild this code to build the score
-myData=[1, 1, 1,2,1,3,1,4,2,1,2,2,2,3,2,4,3,1,3,2,3,3,3,4]
-x = np.array(myData).reshape(-1,2)
-print(x)
+#myData=[1, 1, 1,2,1,3,1,4,2,1,2,2,2,3,2,4,3,1,3,2,3,3,3,4]
+#x = np.array(myData).reshape(-1,2)
+
+# Constants
+timeSignature='4/4'
+keySignature=m.key.Key('F') #  lowercase = c minor. uppercase = C major
+
+# Build the estimated Score
+estimatedScore= m.stream.Stream()
+# set TimeSignature
+estimatedScore.append(m.meter.TimeSignature(timeSignature))
+# set KeySignature
+estimatedScore.append(keySignature)
+# set the clef
+tc=m.clef.TrebleClef()
+estimatedScore.append(tc)
+
+
+
+print(X)
 print("\n\n")
 curMeasure=1
-for e in x:
+for e in X:
   itrMeasure=e[0]
   print("itrMeasure:", itrMeasure)
   # Try to detect when a measure changes 
@@ -258,4 +272,6 @@ for e in x:
     # Measure is not changed  
     print("Existing measure", itrMeasure)
     print(e)
-   
+
+
+ estimatedScore.show()  
