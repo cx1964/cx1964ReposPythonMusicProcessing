@@ -14,8 +14,8 @@ import noteconversion as nc
 musescoreProg='MuseScore-3.6.2.548021370-x86_64_461d9f78f967c0640433c95ccb200785.AppImage'
 scorePath = "/home/claude/Documents/sources/python/python3/cx1964ReposPythonMusicProcessing"
 # Export de MuseScore File in musicxml (uncompressed music xml format musicxml extention)
-museScoreFile  = "C_major_scale_ascending.musicxml" # in musicxml uncompressed
-museScoreFile2 = "F_major_scale_ascending_8th_notes.musicxml" # in musicxml uncompressed
+#museScoreFile  = "C_major_scale_ascending.musicxml" # in musicxml uncompressed
+#museScoreFile2 = "F_major_scale_ascending_8th_notes.musicxml" # in musicxml uncompressed
 museScoreFile3 = "C_major_scale_ascending_mixed_duration.musicxml" # in musicxml uncompressed
 
 
@@ -27,11 +27,11 @@ museScoreFile3 = "C_major_scale_ascending_mixed_duration.musicxml" # in musicxml
 #print("noteValues['"+ns+"']",nc.getNoteValue(ns))
 #print("\n\n")
 # Test conversion noteValue to Note
-for v in range(0,12,1):
-  n=nc.getNoteName(v, enharmonic=False)
-  print(v,n)
-  n=nc.getNoteName(v, enharmonic=True)
-  print(v,n)
+#for v in range(0,12,1):
+#  n=nc.getNoteName(v, enharmonic=False)
+#  print(v,n)
+#  n=nc.getNoteName(v, enharmonic=True)
+#  print(v,n)
 
 
 # See: https://web.mit.edu/music21/doc/usersGuide/usersGuide_24_environment.html#usersguide-24-environment
@@ -45,8 +45,8 @@ env['autoDownload'] = 'allow'
 #env['musescoreDirectPNGPath'] = '/usr/bin/musescore3'
 env['musicxmlPath'] = '/home/claude/Applications/'+musescoreProg
 
-myScore  = m.converter.parse(scorePath+'/'+museScoreFile , format='musicxml')
-myScore2 = m.converter.parse(scorePath+'/'+museScoreFile2, format='musicxml')
+#myScore  = m.converter.parse(scorePath+'/'+museScoreFile , format='musicxml')
+#myScore2 = m.converter.parse(scorePath+'/'+museScoreFile2, format='musicxml')
 myScore3 = m.converter.parse(scorePath+'/'+museScoreFile3, format='musicxml')
 #print("type(myScore):", type(myScore))
 
@@ -235,10 +235,7 @@ for r in y_pred:
 #print(t, t + (b - t) % b) 
 
 
-# ToDo
-# rebuild this code to build the score
-#myData=[1, 1, 1,2,1,3,1,4,2,1,2,2,2,3,2,4,3,1,3,2,3,3,3,4]
-#x = np.array(myData).reshape(-1,2)
+
 
 # Constants
 timeSignature='4/4'
@@ -255,23 +252,46 @@ tc=m.clef.TrebleClef()
 estimatedScore.append(tc)
 
 
-
+# Debug info
 print(X)
 print("\n\n")
-curMeasure=1
-for e in X:
-  itrMeasure=e[0]
-  print("itrMeasure:", itrMeasure)
-  # Try to detect when a measure changes 
-  if curMeasure != itrMeasure:
-    # Measuer is changed  
-    print("\nNew measure", itrMeasure)
-    curMeasure=itrMeasure
-    print(e)
-  else:
-    # Measure is not changed  
-    print("Existing measure", itrMeasure)
-    print(e)
 
 
- estimatedScore.show()  
+if (X.shape[0] == Y.shape[0]):
+  # Normal Score
+  cnt=0 # counter to sync X and Y (sync time and Notes)
+  curMeasure=1
+  for e in X:
+     
+    # get note properies
+    note_properties = Y[cnt]
+    print("!!! note_properties[", cnt, "]", note_properties)
+    curNoteName=nc.getNoteName(int(round(note_properties[0])), enharmonic=False)
+    print("curNoteName", curNoteName)
+    # toDo process Octave and quarterDuration
+
+    # get time properties of note 
+    #ToDo build note ..
+
+    itrMeasure=e[0]
+    print("itrMeasure:", itrMeasure)
+    # Try to detect when a measure changes 
+    if curMeasure != itrMeasure:
+      # Measuer is changed  
+      print("\nNew measure", itrMeasure)
+      curMeasure=itrMeasure
+      print(e)
+    else:
+      # Measure is not changed  
+      print("Existing measure", itrMeasure)
+      print(e)
+    cnt=cnt+1  
+else:
+  # Unbalanced Score
+  print("Program error: Score not balanced")  
+
+# debug: Check all element e processed  ok => X.shape[0] = cnt
+# #print("X.shape[0]", X.shape[0], "cnt:", cnt)
+
+
+#estimatedScore.show()  
