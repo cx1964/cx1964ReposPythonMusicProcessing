@@ -3,7 +3,7 @@
 #           based on a musicxml input file. To use Lineair Regession
 #           python Scikit-learn module is used.
 #           Music data is processed with music21 python module
-# 
+# Documentation: For multi variant regresion see https://realpython.com/linear-regression-in-python/
 
 # standard modules
 import music21 as m
