@@ -103,14 +103,12 @@ for e3 in myScore3.recurse().notes:
     #      ,"Note quarterlength:", e3.duration.quarterLength
     #)
 
-    # Encoding X
     # Fill time
     time_list.append(e3.measureNumber)      
     time_list.append(e3.offset) 
     #print("Time_list iter:", time_list)
 
-    # Encoding Y 
-    # Fill note properties
+    # File note properties
     note_property_list.append(nc.getNoteValue(e3.name))
     note_property_list.append(e3.octave)
     note_property_list.append(e3.duration.quarterLength)
@@ -171,13 +169,12 @@ r_sq = model.score(X, Y)
 print('coefficient of determination:', r_sq)
 # coefficient of determination: ???
 
-# Unneeded code voor music gen
 # When you’re applying .score(), the arguments are also the predictor x and regressor y, and the return value is 𝑅².
 #
 # The attributes of model are .intercept_, which represents the coefficient, 𝑏₀ and .coef_, which represents 𝑏₁:
-# print('intercept:', model.intercept_)
+print('intercept:', model.intercept_)
 # intercept: 5.633333333333329
-# print('slope:', model.coef_)
+print('slope:', model.coef_)
 # slope: [0.54]
 
 # The code above illustrates how to get 𝑏₀ and 𝑏₁. 
@@ -189,9 +186,9 @@ print('coefficient of determination:', r_sq)
 # You should notice that you can provide y as a two-dimensional array as well.
 # In this case, you’ll get a similar result. This is how it might look:
 new_model = LinearRegression().fit(X, Y)
-#print('intercept:', new_model.intercept_) # not needed for music gen
+print('intercept:', new_model.intercept_)
 # intercept: 
-#print('slope:', new_model.coef_) # not needed for music gen
+print('slope:', new_model.coef_)
 # slope: 
 
 
@@ -199,15 +196,12 @@ new_model = LinearRegression().fit(X, Y)
 # Once there is a satisfactory model, you can use it for predictions with either existing or new data.
 
 # To obtain the predicted response, use .predict():
-print("\n\n")
-print("Tempory solution voor X_new")
-X_new = X # ToDo: create better way to fill X_new
-Y_pred = model.predict(X_new)
-print('Predicted response in numeric values:', Y_pred, sep='\n')
+y_pred = model.predict(X)
+print('predicted response in numeric values:', y_pred, sep='\n')
 
 print("\n\n")
 print("Estimated output in notes (Notename, octave and quarterLength):")
-for r in Y_pred:
+for r in y_pred:
     #print(r)
     # Raw data
     # print(r[0],r[1], r[2])
@@ -263,30 +257,25 @@ print(X)
 print("\n\n")
 
 
-if (X_new.shape[0] == Y_pred.shape[0]):
+if (X.shape[0] == Y.shape[0]):
   # Normal Score
   cnt=0 # counter to sync X and Y (sync time and Notes)
   curMeasure=1
-  for e in X_new:
+  for e in X:
      
     # get note properies
-    note_properties = Y_pred[cnt]
+    note_properties = Y[cnt]
     print("!!! note_properties[", cnt, "]", note_properties)
     curNoteName=nc.getNoteName(int(round(note_properties[0])), enharmonic=False)
     print("curNoteName", curNoteName)
     # toDo process Octave and quarterDuration
 
     # get time properties of note 
-    #ToDo 
-    # build note ..
-    # decoding note values
-    # Do the encoding as inverse of the decoding (see above) 
+    #ToDo build note ..
 
-    '''
     itrMeasure=e[0]
     print("itrMeasure:", itrMeasure)
-    # Try to detect when a measure changes
-    #  
+    # Try to detect when a measure changes 
     if curMeasure != itrMeasure:
       # Measuer is changed  
       print("\nNew measure", itrMeasure)
@@ -296,15 +285,13 @@ if (X_new.shape[0] == Y_pred.shape[0]):
       # Measure is not changed  
       print("Existing measure", itrMeasure)
       print(e)
-    '''
-
     cnt=cnt+1  
 else:
   # Unbalanced Score
   print("Program error: Score not balanced")  
 
-# debug: Check all element e processed  ok => X_new.shape[0] = cnt
-# #print("X_new.shape[0]", X_new.shape[0], "cnt:", cnt)
+# debug: Check all element e processed  ok => X.shape[0] = cnt
+# #print("X.shape[0]", X.shape[0], "cnt:", cnt)
 
 
 #estimatedScore.show()  
