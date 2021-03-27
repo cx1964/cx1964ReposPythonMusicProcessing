@@ -262,7 +262,7 @@ estimatedScore.append(tc)
 print(X)
 print("\n\n")
 
-
+itrNote = m.note.Note()
 if (X_new.shape[0] == Y_pred.shape[0]):
   # Normal Score
   cnt=0 # counter to sync X and Y (sync time and Notes)
@@ -275,7 +275,31 @@ if (X_new.shape[0] == Y_pred.shape[0]):
     print("!!! note_properties[", cnt, "]", note_properties)
     curNoteName=nc.getNoteName(int(round(note_properties[0])), enharmonic=False)
     print("curNoteName", curNoteName)
-    # toDo process Octave and quarterDuration
+    curNoteOctave =  int(round(note_properties[1]))
+    print("curNoteOctave", curNoteOctave)
+    
+    print("ToDo quarterDuration round to 0.25 factors  See above !!!!!!!!!!!!!!!!!!")
+    #  curNotequarterDuration =       toDo quarterDuration
+
+    # Because timeSignature is set, no measure change detection is needed, just add notes. 
+    itrNote.name = curNoteName
+    itrNote.octave = curNoteOctave
+    itrNote.duration.quarterLength = 0.25 # ToDo change value based on note_properties[2])
+    
+    try: 
+      estimatedScore.append(itrNote)
+    except:
+      #
+     print("exception occured @ cnt=", cnt)
+    finally:
+      #  Clean up
+      dummy=0
+    #
+    '''
+    note_property_list.append(nc.getNoteValue(e3.name))
+    note_property_list.append(e3.octave)
+    note_property_list.append(e3.duration.quarterLength)
+    '''
 
     # get time properties of note 
     #ToDo 
@@ -286,7 +310,8 @@ if (X_new.shape[0] == Y_pred.shape[0]):
     # Append Note to estimatedScore
     # estimatedScore.append(itrNote)
 
-    cnt=cnt+1  
+    cnt=cnt+1
+    print("cnt:", cnt)  
 else:
   # Unbalanced Score
   print("Program error: Score not balanced")  
