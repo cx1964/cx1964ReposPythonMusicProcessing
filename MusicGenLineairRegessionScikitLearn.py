@@ -268,8 +268,9 @@ if (X_new.shape[0] == Y_pred.shape[0]):
   cnt=0 # counter to sync X and Y (sync time and Notes)
   curMeasure=1
   for e in X_new:
-     
-    # get note properies
+
+    # Decoding Y_pred: get note properies  
+    # Do the encoding as inverse of the decoding (see above) 
     note_properties = Y_pred[cnt]
     print("!!! note_properties[", cnt, "]", note_properties)
     curNoteName=nc.getNoteName(int(round(note_properties[0])), enharmonic=False)
@@ -278,25 +279,12 @@ if (X_new.shape[0] == Y_pred.shape[0]):
 
     # get time properties of note 
     #ToDo 
-    # build note ..
-    # decoding note values
-    # Do the encoding as inverse of the decoding (see above) 
-
-    '''
-    itrMeasure=e[0]
-    print("itrMeasure:", itrMeasure)
-    # Try to detect when a measure changes
-    #  
-    if curMeasure != itrMeasure:
-      # Measuer is changed  
-      print("\nNew measure", itrMeasure)
-      curMeasure=itrMeasure
-      print(e)
-    else:
-      # Measure is not changed  
-      print("Existing measure", itrMeasure)
-      print(e)
-    '''
+    # build note ...
+    # Because timeSignature is set, no measure change detection is needed, just add notes. 
+    # itrNote = m.note.Note()
+    # set Note propierties
+    # Append Note to estimatedScore
+    # estimatedScore.append(itrNote)
 
     cnt=cnt+1  
 else:
