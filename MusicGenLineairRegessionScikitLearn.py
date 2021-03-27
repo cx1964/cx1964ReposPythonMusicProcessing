@@ -277,14 +277,18 @@ if (X_new.shape[0] == Y_pred.shape[0]):
     print("curNoteName", curNoteName)
     curNoteOctave =  int(round(note_properties[1]))
     print("curNoteOctave", curNoteOctave)
-    
-    print("ToDo quarterDuration round to 0.25 factors  See above !!!!!!!!!!!!!!!!!!")
-    #  curNotequarterDuration =       toDo quarterDuration
 
+    # Process quarterDuration
+    # round to factors of 0.25     
+    t=note_properties[2]
+    base=0.25
+    print("process quarterDuration:", t, t + (base - t) % base)  
+    curNotequarterDuration = t + (base - t) % base 
+    
     # Because timeSignature is set, no measure change detection is needed, just add notes. 
     itrNote.name = curNoteName
     itrNote.octave = curNoteOctave
-    itrNote.duration.quarterLength = 0.25 # ToDo change value based on note_properties[2])
+    itrNote.duration.quarterLength = curNotequarterDuration # ToDo change value based on note_properties[2])
     
     try: 
       estimatedScore.append(itrNote)
