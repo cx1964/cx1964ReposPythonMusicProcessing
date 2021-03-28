@@ -47,28 +47,18 @@ myNote = m.note.Note()
 
 myPart.partName="Piano"
 
-'''
-# begin Rebuild dynamic way. See below
-myMeasure.number=1
-myMeasure.append(m.note.Note(name="C" , quarterLength=1, octave=2))
-myMeasure.append(m.note.Note(name="C#", quarterLength=1, octave=2))
-myMeasure.append(m.note.Note(name="D" , quarterLength=1, octave=2))
-myMeasure.append(m.note.Note(name="D#", quarterLength=1, octave=2))
-myPart.append(myMeasure)
-# begin Rebuild dynamic way See below
-'''
 # Begin build measure 1
 myMeasure=m.stream.Measure(number=1)
-myNote=m.note.Note(name="C", quarterLength=1, octave=2)
+myNote=m.note.Note(name="C", quarterLength=1, octave=4)
 myMeasure.insert(0, myNote)
 
-myNote=m.note.Note(name="C#", quarterLength=1, octave=2)
+myNote=m.note.Note(name="C#", quarterLength=1, octave=4)
 myMeasure.insert(1, myNote)
 
-myNote=m.note.Note(name="D", quarterLength=1, octave=2)
+myNote=m.note.Note(name="D", quarterLength=1, octave=4)
 myMeasure.insert(2, myNote)
 
-myNote=m.note.Note(name="D#", quarterLength=1, octave=2)
+myNote=m.note.Note(name="D#", quarterLength=1, octave=4)
 myMeasure.insert(3, myNote)
 
 myPart.insert(1,myMeasure)
@@ -77,16 +67,16 @@ myPart.insert(1,myMeasure)
 
 # Begin build measure 2
 myMeasure=m.stream.Measure(number=2)
-myNote=m.note.Note(name="E", quarterLength=1, octave=2)
+myNote=m.note.Note(name="E", quarterLength=1, octave=4)
 myMeasure.insert(0, myNote)
 
-myNote=m.note.Note(name="F", quarterLength=1, octave=2)
+myNote=m.note.Note(name="F", quarterLength=1, octave=4)
 myMeasure.insert(1, myNote)
 
-myNote=m.note.Note(name="F#", quarterLength=1, octave=2)
+myNote=m.note.Note(name="F#", quarterLength=1, octave=4)
 myMeasure.insert(2, myNote)
 
-myNote=m.note.Note(name="G", quarterLength=1, octave=2)
+myNote=m.note.Note(name="G", quarterLength=1, octave=4)
 myMeasure.insert(3, myNote)
 
 myPart.insert(2,myMeasure)
@@ -95,31 +85,30 @@ myPart.insert(2,myMeasure)
 
 # Begin build measure 3
 myMeasure=m.stream.Measure(number=3)
-myNote=m.note.Note(name="A", quarterLength=1, octave=2)
+myNote=m.note.Note(name="A", quarterLength=1, octave=4)
 myMeasure.insert(0, myNote)
 
-myNote=m.note.Note(name="A#", quarterLength=1, octave=2)
+myNote=m.note.Note(name="A#", quarterLength=1, octave=4)
 myMeasure.insert(1, myNote)
 
-myNote=m.note.Note(name="B", quarterLength=1, octave=2)
+myNote=m.note.Note(name="B", quarterLength=1, octave=4)
 myMeasure.insert(2, myNote)
 
-myNote=m.note.Note(name="C", quarterLength=1, octave=3)
+myNote=m.note.Note(name="C", quarterLength=1, octave=5)
 myMeasure.insert(3, myNote)
 
 myPart.insert(3,myMeasure)
 # End  build measure 3
 
 
-
-
-
-
 myScore.insert(0, myPart)
 
 
 print("\n\nmyScore")
-myScore.show('text')  
+# debug  myScore.show('text')  
+
+# Show Score in Music Notation program
+myScore.show()
 
 '''
 print("\n\n")
