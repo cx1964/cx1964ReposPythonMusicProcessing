@@ -41,12 +41,13 @@ readScore.show('text')
 
 
 myScore = m.stream.Stream()
-myPart = m.stream.PartStaff()
+myPart = m.stream.Part()
 myMeasure = m.stream.Measure()
 myNote = m.note.Note()
 
 myPart.partName="Piano"
 
+'''
 # begin Rebuild dynamic way. See below
 myMeasure.number=1
 myMeasure.append(m.note.Note(name="C" , quarterLength=1, octave=2))
@@ -55,31 +56,66 @@ myMeasure.append(m.note.Note(name="D" , quarterLength=1, octave=2))
 myMeasure.append(m.note.Note(name="D#", quarterLength=1, octave=2))
 myPart.append(myMeasure)
 # begin Rebuild dynamic way See below
-
-# Begin
-# ToDo: create new method to Add Measure to Part.add
-# if I used new instance of m.stream.Measure() it would work like measure2
-# yoy can only once append a specific variable
 '''
-myMeasure.number=2
-myMeasure.append(m.note.Note(name="E", quarterLength=1))
-myMeasure.append(m.note.Note(name="F", quarterLength=1))
-myMeasure.append(m.note.Note(name="F#", quarterLength=1))
-myMeasure.append(m.note.Note(name="G" , quarterLength=1))
-myPart.repeatAppend(myMeasure,1)
-'''
-# End
+# Begin build measure 1
+myMeasure=m.stream.Measure(number=1)
+myNote=m.note.Note(name="C", quarterLength=1, octave=2)
+myMeasure.insert(0, myNote)
 
-myPart.append(m.stream.Measure(number=2))
-# toDo Prio1: Howto Add Notes for Measure 2
-#myPart.append(m.stream.Measure().append(m.note.Note(name="E", quarterLength=1)))
-#.append(m.note.Note(name="E", quarterLength=1))
+myNote=m.note.Note(name="C#", quarterLength=1, octave=2)
+myMeasure.insert(1, myNote)
+
+myNote=m.note.Note(name="D", quarterLength=1, octave=2)
+myMeasure.insert(2, myNote)
+
+myNote=m.note.Note(name="D#", quarterLength=1, octave=2)
+myMeasure.insert(3, myNote)
+
+myPart.insert(1,myMeasure)
+# End  build measure 1
+
+
+# Begin build measure 2
+myMeasure=m.stream.Measure(number=2)
+myNote=m.note.Note(name="E", quarterLength=1, octave=2)
+myMeasure.insert(0, myNote)
+
+myNote=m.note.Note(name="F", quarterLength=1, octave=2)
+myMeasure.insert(1, myNote)
+
+myNote=m.note.Note(name="F#", quarterLength=1, octave=2)
+myMeasure.insert(2, myNote)
+
+myNote=m.note.Note(name="G", quarterLength=1, octave=2)
+myMeasure.insert(3, myNote)
+
+myPart.insert(2,myMeasure)
+# End  build measure 2
+
+
+# Begin build measure 3
+myMeasure=m.stream.Measure(number=3)
+myNote=m.note.Note(name="A", quarterLength=1, octave=2)
+myMeasure.insert(0, myNote)
+
+myNote=m.note.Note(name="A#", quarterLength=1, octave=2)
+myMeasure.insert(1, myNote)
+
+myNote=m.note.Note(name="B", quarterLength=1, octave=2)
+myMeasure.insert(2, myNote)
+
+myNote=m.note.Note(name="C", quarterLength=1, octave=3)
+myMeasure.insert(3, myNote)
+
+myPart.insert(3,myMeasure)
+# End  build measure 3
 
 
 
-myPart.append(m.stream.Measure(number=3))
 
-myScore.append(myPart)
+
+
+myScore.insert(0, myPart)
 
 
 print("\n\nmyScore")
