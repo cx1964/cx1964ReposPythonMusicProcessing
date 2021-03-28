@@ -60,10 +60,15 @@ myMeasure.append(myNote2)
 
 myPart.append(myMeasure)
 
-myMeasure.number=2
 
+myMeasure2 = m.stream.Measure()
+myMeasure2.number=2
+
+myPart.append(myMeasure2)
 
 myScore.append(myPart)
+
+
 
 print("\n\nmyScore")
 myScore.show('text')  
