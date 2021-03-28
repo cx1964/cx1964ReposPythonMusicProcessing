@@ -47,14 +47,14 @@ myNote = m.note.Note()
 
 myPart.partName="Piano"
 
-
+# begin Rebuild dynamic way. See below
 myMeasure.number=1
 myMeasure.append(m.note.Note(name="C" , quarterLength=1, octave=2))
 myMeasure.append(m.note.Note(name="C#", quarterLength=1, octave=2))
 myMeasure.append(m.note.Note(name="D" , quarterLength=1, octave=2))
 myMeasure.append(m.note.Note(name="D#", quarterLength=1, octave=2))
 myPart.append(myMeasure)
-
+# begin Rebuild dynamic way See below
 
 # Begin
 # ToDo: create new method to Add Measure to Part.add
@@ -66,11 +66,18 @@ myMeasure.append(m.note.Note(name="E", quarterLength=1))
 myMeasure.append(m.note.Note(name="F", quarterLength=1))
 myMeasure.append(m.note.Note(name="F#", quarterLength=1))
 myMeasure.append(m.note.Note(name="G" , quarterLength=1))
-#myPart.append(myMeasure)
+myPart.repeatAppend(myMeasure,1)
 '''
 # End
-myPart.append(m.stream.Measure(number=2))
 
+myPart.append(m.stream.Measure(number=2))
+# toDo Prio1: Howto Add Notes for Measure 2
+#myPart.append(m.stream.Measure().append(m.note.Note(name="E", quarterLength=1)))
+#.append(m.note.Note(name="E", quarterLength=1))
+
+
+
+myPart.append(m.stream.Measure(number=3))
 
 myScore.append(myPart)
 
