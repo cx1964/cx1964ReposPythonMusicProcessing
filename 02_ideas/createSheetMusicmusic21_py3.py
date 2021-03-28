@@ -49,25 +49,30 @@ myPart.partName="Piano"
 
 
 myMeasure.number=1
-myNote.name="C"
-myNote.quarterLength=1
-myMeasure.append(myNote)
-
-myNote2 = m.note.Note()
-myNote2.name="C#"
-myNote2.quarterLength=1
-myMeasure.append(myNote2)
-
+myMeasure.append(m.note.Note(name="C" , quarterLength=1, octave=2))
+myMeasure.append(m.note.Note(name="C#", quarterLength=1, octave=2))
+myMeasure.append(m.note.Note(name="D" , quarterLength=1, octave=2))
+myMeasure.append(m.note.Note(name="D#", quarterLength=1, octave=2))
 myPart.append(myMeasure)
 
 
-myMeasure2 = m.stream.Measure()
-myMeasure2.number=2
+# Begin
+# ToDo: create new method to Add Measure to Part.add
+# if I used new instance of m.stream.Measure() it would work like measure2
+# yoy can only once append a specific variable
+'''
+myMeasure.number=2
+myMeasure.append(m.note.Note(name="E", quarterLength=1))
+myMeasure.append(m.note.Note(name="F", quarterLength=1))
+myMeasure.append(m.note.Note(name="F#", quarterLength=1))
+myMeasure.append(m.note.Note(name="G" , quarterLength=1))
+#myPart.append(myMeasure)
+'''
+# End
+myPart.append(m.stream.Measure(number=2))
 
-myPart.append(myMeasure2)
 
 myScore.append(myPart)
-
 
 
 print("\n\nmyScore")
