@@ -262,6 +262,9 @@ estimatedScore.append(tc)
 print(X)
 print("\n\n")
 
+
+print("\n\n")
+print("process measures")
 itrNote = m.note.Note()
 if (X_new.shape[0] == Y_pred.shape[0]):
   # Normal Score
@@ -286,10 +289,15 @@ if (X_new.shape[0] == Y_pred.shape[0]):
     curNotequarterDuration = t + (base - t) % base 
     
     # Because timeSignature is set, no measure change detection is needed, just add notes. 
+    # This is not true. ToDo: set TimeSignature
+
     itrNote.name = curNoteName
     itrNote.octave = curNoteOctave
     itrNote.duration.quarterLength = curNotequarterDuration # ToDo change value based on note_properties[2])
     
+    '''
+    ToDo create new Code to build score:
+    see ./02_ideas/source createSheetMusicmusic21_py3.py
     try: 
       estimatedScore.append(itrNote)
     except:
@@ -299,6 +307,8 @@ if (X_new.shape[0] == Y_pred.shape[0]):
       #  Clean up
       dummy=0
     #
+    '''
+
     '''
     note_property_list.append(nc.getNoteValue(e3.name))
     note_property_list.append(e3.octave)
@@ -313,6 +323,19 @@ if (X_new.shape[0] == Y_pred.shape[0]):
     # set Note propierties
     # Append Note to estimatedScore
     # estimatedScore.append(itrNote)
+
+    itrMeasure=int(e[0])
+    print("itrMeasure:", itrMeasure)
+    # Try to detect when a measure changes 
+    if curMeasure != itrMeasure:
+      # Measuer is changed  
+      print("\nNew measure", itrMeasure)
+      curMeasure=itrMeasure
+      print(e)
+    else:
+      # Measure is not changed  
+      print("Existing measure", itrMeasure)
+      print(e)
 
     cnt=cnt+1
     print("cnt:", cnt)  
