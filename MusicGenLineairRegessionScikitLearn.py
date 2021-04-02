@@ -189,21 +189,25 @@ timeSignature=m.meter.TimeSignature(timeSignatureString)
 upperStaffClef=m.clef.TrebleClef()
 lowerStaffClef=m.clef.BassClef()
 
-myScore = m.stream.Stream()
+#myScore = m.stream.Stream()
+estimatedScore = m.stream.Stream()
 
-
-# set TimeSignature
-#myScore.append(m.meter.TimeSignature(timeSignature))
 
 myPart = m.stream.Part()
 myPart_UpperStaff = m.stream.Part()
+# set Clef UpperStaff
 myPart_UpperStaff.append(upperStaffClef)
+# set TimeSignature UpperStaff
 myPart_UpperStaff.append(timeSignature)
+# set keySignature UpperStaff
 myPart_UpperStaff.append(keySignature)
 
 myPart_LowerStaff = m.stream.Part()
+# set Clef UpperStaff
 myPart_LowerStaff.append(lowerStaffClef)
+# set TimeSignature LowerStaff
 myPart_LowerStaff.append(timeSignature)
+# set keySignature LowerStaff
 myPart_LowerStaff.append(keySignature)
 
 myMeasure = m.stream.Measure()
@@ -230,9 +234,7 @@ myPart_UpperStaff.insert(1,myMeasure)
 # End  build measure 1
 
 
-myScore.insert(1, myPart_UpperStaff)
-myScore.insert(2, myPart_LowerStaff)
-myScore.show()
+
 
 
 # Debug info
@@ -297,4 +299,6 @@ else:
 # #print("X_new.shape[0]", X_new.shape[0], "cnt:", cnt)
 
 
-#estimatedScore.show() 
+estimatedScore.insert(1, myPart_UpperStaff)
+estimatedScore.insert(2, myPart_LowerStaff)
+estimatedScore.show() 
