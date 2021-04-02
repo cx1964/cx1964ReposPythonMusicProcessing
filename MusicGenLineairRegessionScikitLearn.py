@@ -14,25 +14,7 @@ import noteconversion as nc
 musescoreProg='MuseScore-3.6.2.548021370-x86_64_461d9f78f967c0640433c95ccb200785.AppImage'
 scorePath = "/home/claude/Documents/sources/python/python3/cx1964ReposPythonMusicProcessing"
 # Export de MuseScore File in musicxml (uncompressed music xml format musicxml extention)
-#museScoreFile  = "C_major_scale_ascending.musicxml" # in musicxml uncompressed
-#museScoreFile2 = "F_major_scale_ascending_8th_notes.musicxml" # in musicxml uncompressed
 museScoreFile3 = "C_major_scale_ascending_mixed_duration.musicxml" # in musicxml uncompressed
-
-
-
-# Test conversion Note to noteValue
-# print("noteValues['C#']",nc.getNoteValue('C#'))
-# print("noteValues['c#']",nc.getNoteValue('c#'))
-#ns='d#'
-#print("noteValues['"+ns+"']",nc.getNoteValue(ns))
-#print("\n\n")
-# Test conversion noteValue to Note
-#for v in range(0,12,1):
-#  n=nc.getNoteName(v, enharmonic=False)
-#  print(v,n)
-#  n=nc.getNoteName(v, enharmonic=True)
-#  print(v,n)
-
 
 # See: https://web.mit.edu/music21/doc/usersGuide/usersGuide_24_environment.html#usersguide-24-environment
 # See: https://web.mit.edu/music21/doc/usersGuide/usersGuide_24_environment.html
@@ -45,11 +27,7 @@ env['autoDownload'] = 'allow'
 #env['musescoreDirectPNGPath'] = '/usr/bin/musescore3'
 env['musicxmlPath'] = '/home/claude/Applications/'+musescoreProg
 
-#myScore  = m.converter.parse(scorePath+'/'+museScoreFile , format='musicxml')
-#myScore2 = m.converter.parse(scorePath+'/'+museScoreFile2, format='musicxml')
 myScore3 = m.converter.parse(scorePath+'/'+museScoreFile3, format='musicxml')
-#print("type(myScore):", type(myScore))
-
 
 
 time_list = []
@@ -63,46 +41,9 @@ note_property_list=[]
 #myScore.show('text')  
 
 # https://web.mit.edu/music21/doc/usersGuide/usersGuide_06_stream2.html
-'''
-for e in myScore.recurse():
-    #print(e)
-    print(e.offset, e, e.activeSite)
-print("\n\n")
-'''
 
-# https://web.mit.edu/music21/doc/usersGuide/usersGuide_06_stream2.html
-'''
-# get the notes
-for e in myScore.recurse().notes:
-    #print(e)
-    print(e.offset,e.name, e.octave, e.fullName, e.activeSite, "notevalue:", getNoteValue(e.name))
-    #print(e.fullName)
 
-    # ToDo
-    # To prepare for AI convert NoteName to numeric Value with function getNoteValue
-'''
-
-'''
-print("\n\n")
-for e2 in myScore2.recurse().notes:
-    #print(e2)
-    print(e2.offset,e2.name, e2.octave, e2.fullName, e2.activeSite, "Notevalue:", getNoteValue(e2.name))
-    #print(e.fullName)
-'''
-
-print("\n\n")
 for e3 in myScore3.recurse().notes:
-    #print(e3)
-    #print(  "Measure:", e3.measureNumber
-    #      ,"Note Offset in Measure:", e3.offset
-    #      ,"Note:", e3.name
-    #      ,"Octave:", e3.octave
-    #      ,e3.nameWithOctave
-    #      ,"Notevalue:", getNoteValue(e3.name)
-    #      ,"Note duration:", e3.duration.type
-    #      ,"Note quarterlength:", e3.duration.quarterLength
-    #)
-
     # Encoding X
     # Fill time
     time_list.append(e3.measureNumber)      
@@ -127,10 +68,6 @@ print(X)
 Y = np.array(note_property_list).reshape(-1, 3)
 print("Y.shape",Y.shape)
 print(Y)
-    
-# load sheetmusic in musescore
-#myScore.show()  
-
 
 # Step 1: Import packages and classes
 import numpy as np
@@ -168,7 +105,7 @@ model = mdl.fit(X, Y)
 
 # Step 4: Get results
 r_sq = model.score(X, Y)
-print('coefficient of determination:', r_sq)
+# print('coefficient of determination:', r_sq)
 # coefficient of determination: ???
 
 # Unneeded code voor music gen
@@ -189,11 +126,6 @@ print('coefficient of determination:', r_sq)
 # You should notice that you can provide y as a two-dimensional array as well.
 # In this case, you’ll get a similar result. This is how it might look:
 new_model = LinearRegression().fit(X, Y)
-#print('intercept:', new_model.intercept_) # not needed for music gen
-# intercept: 
-#print('slope:', new_model.coef_) # not needed for music gen
-# slope: 
-
 
 # Step 5: Predict response
 # Once there is a satisfactory model, you can use it for predictions with either existing or new data.
@@ -208,15 +140,7 @@ print('Predicted response in numeric values:', Y_pred, sep='\n')
 print("\n\n")
 print("Estimated output in notes (Notename, octave and quarterLength):")
 for r in Y_pred:
-    #print(r)
-    # Raw data
-    # print(r[0],r[1], r[2])
-    # Rounded data
-    # Round r[0] to whole numbers
-    # Round r[1] to whole numbers
-    # Round r[2] to 0.25 when 1/4 note is used
-    # print(int(round(r[0])),int(round(r[1])), r[2])
- 
+
     # toDo round to a 0.25 resolution because input used 1/4 notes
     t=r[2]
     base=0.25
@@ -244,21 +168,75 @@ for r in Y_pred:
 
 
 # Constants
-timeSignature='4/4'
-keySignature=m.key.Key('F') #  lowercase = c minor. uppercase = C major
+# timeSignature='4/4'
+# keySignature=m.key.Key('F') #  lowercase = c minor. uppercase = C major
 
 # Build the estimated Score
-estimatedScore= m.stream.Stream()
-# set TimeSignature
-estimatedScore.append(m.meter.TimeSignature(timeSignature))
+# estimatedScore= m.stream.Stream()
+
 # set KeySignature
-estimatedScore.append(keySignature)
+# estimatedScore.append(keySignature)
 # set the clef
-tc=m.clef.TrebleClef()
-estimatedScore.append(tc)
+# tc=m.clef.TrebleClef()
+# estimatedScore.append(tc)
+
+
+
+# Constants
+timeSignatureString='4/4'
+keySignature=m.key.Key('F') #  lowercase = c minor. uppercase = C major
+timeSignature=m.meter.TimeSignature(timeSignatureString)
+upperStaffClef=m.clef.TrebleClef()
+lowerStaffClef=m.clef.BassClef()
+
+myScore = m.stream.Stream()
+
+
+# set TimeSignature
+#myScore.append(m.meter.TimeSignature(timeSignature))
+
+myPart = m.stream.Part()
+myPart_UpperStaff = m.stream.Part()
+myPart_UpperStaff.append(upperStaffClef)
+myPart_UpperStaff.append(timeSignature)
+myPart_UpperStaff.append(keySignature)
+
+myPart_LowerStaff = m.stream.Part()
+myPart_LowerStaff.append(lowerStaffClef)
+myPart_LowerStaff.append(timeSignature)
+myPart_LowerStaff.append(keySignature)
+
+myMeasure = m.stream.Measure()
+myNote = m.note.Note()
+
+myPart_UpperStaff.partName="Piano Upper"
+myPart_LowerStaff.partName="Piano Lower"
+
+# Begin build measure 1
+myMeasure=m.stream.Measure(number=1)
+myNote=m.note.Note(name="C", quarterLength=1, octave=4)
+myMeasure.insert(0, myNote)
+
+myNote=m.note.Note(name="C#", quarterLength=1, octave=4)
+myMeasure.insert(1, myNote)
+
+myNote=m.note.Note(name="D", quarterLength=1, octave=4)
+myMeasure.insert(2, myNote)
+
+myNote=m.note.Note(name="D#", quarterLength=1, octave=4)
+myMeasure.insert(3, myNote)
+
+myPart_UpperStaff.insert(1,myMeasure)
+# End  build measure 1
+
+
+myScore.insert(1, myPart_UpperStaff)
+myScore.insert(2, myPart_LowerStaff)
+myScore.show()
 
 
 # Debug info
+print("OK?")
 print(X)
 print("\n\n")
 
@@ -295,34 +273,6 @@ if (X_new.shape[0] == Y_pred.shape[0]):
     itrNote.octave = curNoteOctave
     itrNote.duration.quarterLength = curNotequarterDuration # ToDo change value based on note_properties[2])
     
-    '''
-    ToDo create new Code to build score:
-    see ./02_ideas/source createSheetMusicmusic21_py3.py
-    try: 
-      estimatedScore.append(itrNote)
-    except:
-      #
-     print("exception occured @ cnt=", cnt)
-    finally:
-      #  Clean up
-      dummy=0
-    #
-    '''
-
-    '''
-    note_property_list.append(nc.getNoteValue(e3.name))
-    note_property_list.append(e3.octave)
-    note_property_list.append(e3.duration.quarterLength)
-    '''
-
-    # get time properties of note 
-    #ToDo 
-    # build note ...
-    # Because timeSignature is set, no measure change detection is needed, just add notes. 
-    # itrNote = m.note.Note()
-    # set Note propierties
-    # Append Note to estimatedScore
-    # estimatedScore.append(itrNote)
 
     itrMeasure=int(e[0])
     print("itrMeasure:", itrMeasure)
@@ -347,4 +297,4 @@ else:
 # #print("X_new.shape[0]", X_new.shape[0], "cnt:", cnt)
 
 
-#estimatedScore.show()  
+#estimatedScore.show() 
