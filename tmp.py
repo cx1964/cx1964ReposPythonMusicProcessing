@@ -228,7 +228,7 @@ myPart_UpperStaff.insert(1,myMeasure)
 
 
 # Debug info
-# print(X)
+#print(X_new)
 # print("\n\n")
 
 
@@ -249,7 +249,7 @@ if (X_new.shape[0] == Y_pred.shape[0]):
     curNoteName=nc.getNoteName(int(round(note_properties[0])), enharmonic=False)
     print("curNoteName", curNoteName)
     curNoteOctave =  int(round(note_properties[1]))
-    print("curNoteOctave", curNoteOctave)
+    #print("curNoteOctave", curNoteOctave)
 
     # Process quarterDuration
     curNotequarterDuration = mu.roundTo(note_properties[2], base)
@@ -261,41 +261,72 @@ if (X_new.shape[0] == Y_pred.shape[0]):
 
     itrMeasure=int(e[0])
     itrOffset=e[1]
-    # ToDo
-    # Where to Use offset in Measure
-    print("ToDo Where to Use offset in Measure??  itrOffset:", itrOffset)
 
+    print("ToDo itrMeasure=", itrMeasure, "itrOffset:", itrOffset)
     #myMeasure=m.stream.Measure(number=1)
-    myMeasure=m.stream.Measure(number=itrMeasure
-                              )
-                                    
-    myNote=m.note.Note( name=curNoteName
+    #note.type={whole, half, quarter}
+
+    '''                       
+    myNote=m.note.Note( name="a"    # curNoteName
                        ,quarterLength=curNotequarterDuration
-                       ,octave=curNoteOctave)
+                       ,octave=curNoteOctave
+                       ,offset=1
+                       ,type="quarter"  
+                      )
+    myMeasure.insert(noteCount, myNote)
+    noteCount=noteCount+1     
+
+    myNote=m.note.Note( name="a#"    # curNoteName
+                       ,quarterLength=curNotequarterDuration
+                       ,octave=curNoteOctave
+                       ,offset=3
+                       ,type="quarter" 
+                      )
     myMeasure.insert(noteCount, myNote)
     noteCount=noteCount+1
  
-
-    print("itrMeasure:", itrMeasure)
-
-
+    myNote=m.note.Note( name="a"    # curNoteName
+                       ,quarterLength=curNotequarterDuration
+                       ,octave=curNoteOctave
+                       ,offset=4
+                       ,type="quarter" 
+                      )
+    myMeasure.insert(noteCount, myNote)
+    noteCount=noteCount+1
+    '''
 
     # Try to detect when a measure changes 
     if curMeasure != itrMeasure:
       # Measuer is changed
       
       # Add old measure to Stream 
-      myPart_UpperStaff.insert(1,myMeasure)
+      myPart_UpperStaff.insert(curMeasure,myMeasure)
       
       #  process New Measure 
       print("\nNew measure", itrMeasure)
       curMeasure=itrMeasure
-      print("then e (e contains info cur measure and cur offset  => X )=",e)
+      print("then")
+      myNote=m.note.Note( name=curNoteName
+                         ,quarterLength=curNotequarterDuration
+                         ,octave=curNoteOctave
+                         ,offset=itrOffset
+                         ,type="quarter"  
+                        )
     else:
       # Measure is not changed  
       print("Existing measure", itrMeasure)
-      print("else e (e contains info cur measure and cur offset  => X )=",e)
+      print("else")
 
+      print("loop myMeasure=", myMeasure, "itrOffset", itrOffset)
+
+      myNote=m.note.Note( name=curNoteName
+                         ,quarterLength=curNotequarterDuration
+                         ,octave=curNoteOctave
+                         ,offset=itrOffset
+                         ,type="quarter"  
+                        )
+    myMeasure.insert(cnt, myNote)
+    noteCount=noteCount+1      
     cnt=cnt+1
     print("cnt:", cnt)  
 else:
@@ -306,6 +337,13 @@ else:
 # #print("X_new.shape[0]", X_new.shape[0], "cnt:", cnt)
 
 
+# c = m.converter.parse('tinynotation: 4/4 c4 d4 d4 f4 g4 a4 b4. ') # 1st letter lowercase => treblecleff, 1st letter uppercase => bass cleff
+# estimatedScore.insert(0, c)
+
 estimatedScore.insert(1, myPart_UpperStaff)
 estimatedScore.insert(2, myPart_LowerStaff)
+
+
+Print("ToDo: All Notes available not alle measures")
 estimatedScore.show() 
+#estimatedScore.show('text') 
