@@ -155,24 +155,6 @@ for r in Y_pred:
     print(nc.getNoteName(int(round(r[0])), enharmonic=False),int(round(r[1])), v)
 
 
-# Round for 1/4 notes to 0.25
-#t=0.5064102564102564
-#b=0.25
-#t + (5 - t) % b
-#print(t, t + (b - t) % b) 
-#
-#t=1.7064102564102564
-#b=0.25
-#t + (5 - t) % b
-#print(t, t + (b - t) % b)  
-#
-#t=1.7664102564102564
-#b=0.25
-#t + (5 - t) % b
-#print(t, t + (b - t) % b) 
-
-
-
 
 # Constants
 # timeSignature='4/4'
@@ -223,6 +205,7 @@ myNote = m.note.Note()
 myPart_UpperStaff.partName="Piano Upper"
 myPart_LowerStaff.partName="Piano Lower"
 
+'''
 # Begin build measure 1
 myMeasure=m.stream.Measure(number=1)
 myNote=m.note.Note(name="C", quarterLength=1, octave=4)
@@ -239,15 +222,14 @@ myMeasure.insert(3, myNote)
 
 myPart_UpperStaff.insert(1,myMeasure)
 # End  build measure 1
-
+'''
 
 
 
 
 # Debug info
-print("OK?")
-print(X)
-print("\n\n")
+# print(X)
+# print("\n\n")
 
 
 print("\n\n")
@@ -257,42 +239,62 @@ if (X_new.shape[0] == Y_pred.shape[0]):
   # Normal Score
   cnt=0 # counter to sync X and Y (sync time and Notes)
   curMeasure=1
+  noteCount=0
   for e in X_new:
 
     # Decoding Y_pred: get note properies  
     # Do the encoding as inverse of the decoding (see above) 
     note_properties = Y_pred[cnt]
-    print("!!! note_properties[", cnt, "]", note_properties)
+    #print("!!! note_properties[", cnt, "]", note_properties)
     curNoteName=nc.getNoteName(int(round(note_properties[0])), enharmonic=False)
     print("curNoteName", curNoteName)
     curNoteOctave =  int(round(note_properties[1]))
     print("curNoteOctave", curNoteOctave)
 
     # Process quarterDuration
-    # round to multiples of 0.25     
-    #cleanup: t=note_properties[2]
-    #cleanup: base=0.25
-    #cleanup: print("process quarterDuration:", t, t + (base - t) % base, "zelfde ??:",mu.roundTo(note_properties[2], 0.25))  
-    #cleanup: curNotequarterDuration = t + (base - t) % base 
     curNotequarterDuration = mu.roundTo(note_properties[2], base)
 
-    itrNote.name = curNoteName
-    itrNote.octave = curNoteOctave
-    itrNote.duration.quarterLength = curNotequarterDuration # ToDo change value based on note_properties[2])
+    #itrNote.name = curNoteName
+    #itrNote.octave = curNoteOctave
+    #itrNote.duration.quarterLength = curNotequarterDuration # ToDo change value based on note_properties[2])
     
 
     itrMeasure=int(e[0])
+    itrOffset=e[1]
+    # ToDo
+    # Where to Use offset in Measure
+    print("ToDo Where to Use offset in Measure??  itrOffset:", itrOffset)
+
+    #myMeasure=m.stream.Measure(number=1)
+    myMeasure=m.stream.Measure(number=itrMeasure
+                              )
+                                    
+    myNote=m.note.Note( name=curNoteName
+                       ,quarterLength=curNotequarterDuration
+                       ,octave=curNoteOctave)
+    myMeasure.insert(noteCount, myNote)
+    noteCount=noteCount+1
+ 
+
     print("itrMeasure:", itrMeasure)
+
+
+
     # Try to detect when a measure changes 
     if curMeasure != itrMeasure:
-      # Measuer is changed  
+      # Measuer is changed
+      
+      # Add old measure to Stream 
+      myPart_UpperStaff.insert(1,myMeasure)
+      
+      #  process New Measure 
       print("\nNew measure", itrMeasure)
       curMeasure=itrMeasure
-      print(e)
+      print("then e (e contains info cur measure and cur offset  => X )=",e)
     else:
       # Measure is not changed  
       print("Existing measure", itrMeasure)
-      print(e)
+      print("else e (e contains info cur measure and cur offset  => X )=",e)
 
     cnt=cnt+1
     print("cnt:", cnt)  
