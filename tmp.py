@@ -20,6 +20,9 @@ scorePath = "/home/claude/Documents/sources/python/python3/cx1964ReposPythonMusi
 # Export de MuseScore File in musicxml (uncompressed music xml format musicxml extention)
 museScoreFile3 = "C_major_scale_ascending_mixed_duration.musicxml" # in musicxml uncompressed
 
+base = 0.25 # round Note durations to multiples of base factors. Round 1/4 notes to base=0.25 and 1/8 notes to base=0.125 0.0625, 0,03125 etc
+
+
 # See: https://web.mit.edu/music21/doc/usersGuide/usersGuide_24_environment.html#usersguide-24-environment
 # See: https://web.mit.edu/music21/doc/usersGuide/usersGuide_24_environment.html
 env = m.environment.UserSettings()
@@ -271,7 +274,7 @@ if (X_new.shape[0] == Y_pred.shape[0]):
     #cleanup: base=0.25
     #cleanup: print("process quarterDuration:", t, t + (base - t) % base, "zelfde ??:",mu.roundTo(note_properties[2], 0.25))  
     #cleanup: curNotequarterDuration = t + (base - t) % base 
-    curNotequarterDuration = mu.roundTo(note_properties[2], 0.25)
+    curNotequarterDuration = mu.roundTo(note_properties[2], base)
 
     itrNote.name = curNoteName
     itrNote.octave = curNoteOctave
