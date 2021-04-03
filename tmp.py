@@ -344,6 +344,6 @@ estimatedScore.insert(1, myPart_UpperStaff)
 estimatedScore.insert(2, myPart_LowerStaff)
 
 
-Print("ToDo: All Notes available not alle measures")
+print("ToDo: All Notes available not alle measures")
 estimatedScore.show() 
 #estimatedScore.show('text') 
