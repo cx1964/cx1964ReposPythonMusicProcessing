@@ -58,8 +58,9 @@ myMeasure.insert(1, myNote)
 myNote=m.note.Note(name="D", quarterLength=1, octave=4)
 myMeasure.insert(2, myNote)
 
-myNote=m.note.Note(name="D#", quarterLength=1, octave=4)
-myMeasure.insert(3, myNote)
+# add a Chord
+myChord=m.chord.Chord(["C", "F#","A"])
+myMeasure.insert(3, myChord)
 
 myPart.insert(1,myMeasure)
 # End  build measure 1
