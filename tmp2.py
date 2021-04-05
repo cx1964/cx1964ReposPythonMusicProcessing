@@ -1,4 +1,4 @@
-# File: tmp.py
+# File: tmp2.py
 
 # File: MusicGenLineairRegessionScikitLearn.py
 # Function: First experiment to generate notes based on Lineair Regession estimates
@@ -310,7 +310,7 @@ if (X_new.shape[0] == Y_pred.shape[0]):
                          ,quarterLength=curNotequarterDuration
                          ,octave=curNoteOctave
                          ,offset=itrOffset
-                         ,type="quarter"  
+                         #,type="quarter"  
                         )
     else:
       # Measure is not changed  
@@ -323,7 +323,7 @@ if (X_new.shape[0] == Y_pred.shape[0]):
                          ,quarterLength=curNotequarterDuration
                          ,octave=curNoteOctave
                          ,offset=itrOffset
-                         ,type="quarter"  
+                         #,type="quarter"  
                         )
     myMeasure.insert(cnt, myNote)
     noteCount=noteCount+1      
