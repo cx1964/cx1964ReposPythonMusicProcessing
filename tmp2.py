@@ -142,7 +142,7 @@ print("\n\n")
 print("Tempory solution voor X_new")
 X_new = X # ToDo: create better way to fill X_new
 Y_pred = model.predict(X_new)
-print('Predicted response in numeric values:', Y_pred, sep='\n')
+print('\n\nPredicted response in numeric values Y_pred:', Y_pred, sep='\n')
 
 print("\n\n")
 print("Estimated output in notes (Notename, octave and quarterLength):")
@@ -252,7 +252,7 @@ if (X_new.shape[0] == Y_pred.shape[0]):
     #print("curNoteOctave", curNoteOctave)
 
     # Process quarterDuration
-    curNotequarterDuration = mu.roundTo(note_properties[2], base)
+    curNotequarterDurationY = mu.roundTo(note_properties[2], base)
 
     #itrNote.name = curNoteName
     #itrNote.octave = curNoteOctave
@@ -295,32 +295,45 @@ if (X_new.shape[0] == Y_pred.shape[0]):
     noteCount=noteCount+1
     '''
 
+
+    # ToDo Solve problem1
+    print("ToDo Fix problem filling measures with estimated notes !!!")
+    # Problem1:
+    # Measure values in X_new (value from [0] in X-new) does not match with duration from current note and offset in X_new(value [1] in X_new)
+    # Because base on (see "Predicted response in numeric values Y_pred:" and "Estimated output in notes (Notename, octave and quarterLength):")
+    # Solution te implement: Estimated output NoteName and quarterlength is ok, fill a Measure by your self 
+    #                                                                                          ============
+    # instead using Measure value from  itrMeasure=int(e[0]).
+    # ======= 
+
+
     # Try to detect when a measure changes 
     if curMeasure != itrMeasure:
       # Measuer is changed
       
       # Add old measure to Stream 
-      myPart_UpperStaff.insert(curMeasure,myMeasure)
+      print("@insert curMeasure:", curMeasure, "itrMeasure:",itrMeasure)
+      myPart_UpperStaff.insert(itrMeasure,myMeasure)
       
       #  process New Measure 
       print("\nNew measure", itrMeasure)
       curMeasure=itrMeasure
-      print("then")
+      print("then", " note ",curNoteName, "curNotequarterDurationY:",curNotequarterDurationY )
       myNote=m.note.Note( name=curNoteName
-                         ,quarterLength=curNotequarterDuration
+                         ,quarterLength=curNotequarterDurationY
                          ,octave=curNoteOctave
                          ,offset=itrOffset
                          #,type="quarter"  
                         )
     else:
-      # Measure is not changed  
+      # Measure is not changed 
       print("Existing measure", itrMeasure)
-      print("else")
+      print("else", " note ",curNoteName, "curNotequarterDurationY:",curNotequarterDurationY )
 
       print("loop myMeasure=", myMeasure, "itrOffset", itrOffset)
 
       myNote=m.note.Note( name=curNoteName
-                         ,quarterLength=curNotequarterDuration
+                         ,quarterLength=curNotequarterDurationY
                          ,octave=curNoteOctave
                          ,offset=itrOffset
                          #,type="quarter"  
@@ -344,6 +357,6 @@ estimatedScore.insert(1, myPart_UpperStaff)
 estimatedScore.insert(2, myPart_LowerStaff)
 
 
-print("ToDo: All Notes available not alle measures")
+print("ToDo: All Notes available. See problem above")
 estimatedScore.show() 
 #estimatedScore.show('text') 
