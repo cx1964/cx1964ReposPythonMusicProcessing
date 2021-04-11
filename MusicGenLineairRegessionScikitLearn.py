@@ -55,8 +55,8 @@ SCOREPATH = "/home/claude/Documents/sources/python/python3/cx1964ReposPythonMusi
 MUSESCOREFILE = "C_major_scale_ascending_mixed_duration.musicxml" # in musicxml uncompressed
 MUSESCOREPROG='MuseScore-3.6.2.548021370-x86_64_461d9f78f967c0640433c95ccb200785.AppImage'
 MUSESCOREPROGPATH='/home/claude/Applications/'
-
-
+SCORE_TITLE="python3 Machine learning Generated Sheetmusic "
+COMPOSER="cx1964"
 
 # See: https://web.mit.edu/music21/doc/usersGuide/usersGuide_24_environment.html#usersguide-24-environment
 # See: https://web.mit.edu/music21/doc/usersGuide/usersGuide_24_environment.html
@@ -146,6 +146,11 @@ for r in Y_pred:
 # *********************************************
 # https://web.mit.edu/music21/doc/usersGuide/usersGuide_06_stream2.html
 estimatedScore = m.stream.Stream()
+
+meta_data = m.metadata.Metadata()
+meta_data.title = SCORE_TITLE
+meta_data.composer=COMPOSER
+
 timeSignature=m.meter.TimeSignature(TIME_SIGNATURE_STRING)
 upperStaffClef=m.clef.TrebleClef()
 lowerStaffClef=m.clef.BassClef()
@@ -221,6 +226,7 @@ else:
   # Unbalanced Score
   print("Program error: Score not balanced")  
 
+estimatedScore.insert(0, meta_data)
 estimatedScore.insert(1, myPart_UpperStaff)
 
 
