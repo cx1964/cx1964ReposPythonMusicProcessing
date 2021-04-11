@@ -6,7 +6,39 @@
 #           python Scikit-learn module is used.
 #           Music data is processed with music21 python module
 # Documentation: For multi variant regresion see https://realpython.com/linear-regression-in-python/
-# cx1964 20210403
+# cx1964 20210411
+
+# ToDo1: 
+#  
+# Use the same time signature and key signature for estimated score as used
+# in input file. 
+
+# ToDo2:
+#
+# Refactor0
+# Apply standard python naming conventions:
+# - all capitals for constants
+# - no Cammel case or Pascal case bu use underscores for compound concepts
+#
+# Refactor1
+# Refactor this source file so
+# that it gets a seperate function to read the input file. Input Params scorePath, scoreFile
+# and returns the X en Y arrays with music information for the machine learning proces.
+# 
+# Refactor2
+# Refactor this source file so
+# that it gets a seprate funnction which creates a estimated score. 
+# Input Params de estimated X en Y arrays with music information 
+
+# ToDo3
+# Add meta data in create estimated score
+# Score title
+# Score subtitle
+# Author
+
+# ToDo4
+# Create a copy of this source and use a Nonlinear regression in stead of a linear regression.
+# https://towardsdatascience.com/machine-learning-with-python-easy-and-robust-method-to-fit-nonlinear-data-19e8a1ddbd49
 
 # standard modules
 import music21 as m
@@ -15,12 +47,19 @@ import numpy as np
 import noteconversion as nc
 import my_uilities as mu
 
+
+# Constants
+timeSignatureString='3/4'
+keySignature=m.key.Key('F') #  lowercase = c minor. uppercase = C major
+
 musescoreProg='MuseScore-3.6.2.548021370-x86_64_461d9f78f967c0640433c95ccb200785.AppImage'
 scorePath = "/home/claude/Documents/sources/python/python3/cx1964ReposPythonMusicProcessing"
 # Export de MuseScore File in musicxml (uncompressed music xml format musicxml extention)
 museScoreFile3 = "C_major_scale_ascending_mixed_duration.musicxml" # in musicxml uncompressed
 
 base = 0.25 # round Note durations to multiples of base factors. Round 1/4 notes to base=0.25 and 1/8 notes to base=0.125 0.0625, 0,03125 etc
+
+
 
 
 # See: https://web.mit.edu/music21/doc/usersGuide/usersGuide_24_environment.html#usersguide-24-environment
@@ -155,32 +194,12 @@ for r in Y_pred:
     print(nc.getNoteName(int(round(r[0])), enharmonic=False),int(round(r[1])), v)
 
 
-
-# Constants
-# timeSignature='4/4'
-# keySignature=m.key.Key('F') #  lowercase = c minor. uppercase = C major
-
-# Build the estimated Score
-# estimatedScore= m.stream.Stream()
-
-# set KeySignature
-# estimatedScore.append(keySignature)
-# set the clef
-# tc=m.clef.TrebleClef()
-# estimatedScore.append(tc)
-
-
-
-# Constants
-timeSignatureString='3/4'
-keySignature=m.key.Key('F') #  lowercase = c minor. uppercase = C major
+# *** Create the score with estimated notes ***
+# *********************************************
+estimatedScore = m.stream.Stream()
 timeSignature=m.meter.TimeSignature(timeSignatureString)
 upperStaffClef=m.clef.TrebleClef()
 lowerStaffClef=m.clef.BassClef()
-
-#myScore = m.stream.Stream()
-estimatedScore = m.stream.Stream()
-
 
 myPart = m.stream.Part()
 myPart_UpperStaff = m.stream.Part()
@@ -199,38 +218,14 @@ myPart_LowerStaff.append(timeSignature)
 # set keySignature LowerStaff
 myPart_LowerStaff.append(keySignature)
 
-# don't use a Measure object
-#myMeasure = m.stream.Measure()
+# Do not use a Measure object
+# If you use a Time Signature object without a Measure object
+# when adding a notes, to a stream, measures are filled
+# automatically bases on note lengths
 myNote = m.note.Note()
 
 myPart_UpperStaff.partName="Piano Upper"
 myPart_LowerStaff.partName="Piano Lower"
-
-'''
-# Begin build measure 1
-myMeasure=m.stream.Measure(number=1)
-myNote=m.note.Note(name="C", quarterLength=1, octave=4)
-myMeasure.insert(0, myNote)
-
-myNote=m.note.Note(name="C#", quarterLength=1, octave=4)
-myMeasure.insert(1, myNote)
-
-myNote=m.note.Note(name="D", quarterLength=1, octave=4)
-myMeasure.insert(2, myNote)
-
-myNote=m.note.Note(name="D#", quarterLength=1, octave=4)
-myMeasure.insert(3, myNote)
-
-myPart_UpperStaff.insert(1,myMeasure)
-# End  build measure 1
-'''
-
-
-
-
-# Debug info
-#print(X_new)
-# print("\n\n")
 
 
 print("\n\n")
@@ -255,17 +250,9 @@ if (X_new.shape[0] == Y_pred.shape[0]):
     # Process quarterDuration
     curNotequarterDuration = mu.roundTo(note_properties[2], base)
 
-    #itrNote.name = curNoteName
-    #itrNote.octave = curNoteOctave
-    #itrNote.duration.quarterLength = curNotequarterDuration # ToDo change value based on note_properties[2])
-    
-
     itrMeasure=int(e[0])
     itrOffset=e[1]
-
     print("ToDo itrMeasure=", itrMeasure, "itrOffset:", itrOffset)
-    #myMeasure=m.stream.Measure(number=1)
-    #note.type={whole, half, quarter}
 
     myNote=m.note.Note( name=curNoteName
                        ,quarterLength=curNotequarterDuration
@@ -274,84 +261,10 @@ if (X_new.shape[0] == Y_pred.shape[0]):
                        #,type="quarter"  # use quarterLength or type not both
                       )
 
-
-    '''                       
-    myNote=m.note.Note( name="a"    # curNoteName
-                       ,quarterLength=curNotequarterDuration
-                       ,octave=curNoteOctave
-                       ,offset=1
-                       ,type="quarter"  
-                      )
-    myMeasure.insert(noteCount, myNote)
-    noteCount=noteCount+1     
-
-    myNote=m.note.Note( name="a#"    # curNoteName
-                       ,quarterLength=curNotequarterDuration
-                       ,octave=curNoteOctave
-                       ,offset=3
-                       ,type="quarter" 
-                      )
-    myMeasure.insert(noteCount, myNote)
-    noteCount=noteCount+1
- 
-    myNote=m.note.Note( name="a"    # curNoteName
-                       ,quarterLength=curNotequarterDuration
-                       ,octave=curNoteOctave
-                       ,offset=4
-                       ,type="quarter" 
-                      )
-    myMeasure.insert(noteCount, myNote)
-    noteCount=noteCount+1
-    '''
-
-
-    # ToDo Solve problem1
-    print("ToDo Fix problem filling measures with estimated notes !!!")
-    # Problem1:
-    # Measure values in X_new (value from [0] in X-new) does not match with duration from current note and offset in X_new(value [1] in X_new)
-    # Because base on (see "Predicted response in numeric values Y_pred:" and "Estimated output in notes (Notename, octave and quarterLength):")
-    # Solution te implement: Estimated output NoteName and quarterlength is ok, fill a Measure by your self 
-    #                                                                                          ============
-    # instead using Measure value from  itrMeasure=int(e[0]).
-    # ======= 
-    print("count in each measure til (beatCount):",timeSignature.beatCount, " TimeSignature.numerator:",timeSignature.numerator," TimeSignature.denominator:",timeSignature.denominator)
-
-    '''
-    # Try to detect when a measure changes 
-    if curMeasure != itrMeasure:
-      # Measuer is changed
-      
-      # Add old measure to Stream 
-      print("@insert curMeasure:", curMeasure, "itrMeasure:",itrMeasure)
-      myPart_UpperStaff.insert(itrMeasure,myMeasure)
-      
-      #  process New Measure 
-      print("\nNew measure", itrMeasure)
-      curMeasure=itrMeasure
-      print("then", " note ",curNoteName, "curNotequarterDurationY:",curNotequarterDurationY )
-      myNote=m.note.Note( name=curNoteName
-                         ,quarterLength=curNotequarterDurationY
-                         ,octave=curNoteOctave
-                         ,offset=itrOffset
-                         #,type="quarter"  
-                        )
-    else:
-      # Measure is not changed 
-      print("Existing measure", itrMeasure)
-      print("else", " note ",curNoteName, "curNotequarterDurationY:",curNotequarterDurationY )
-
-      print("loop myMeasure=", myMeasure, "itrOffset", itrOffset)
-
-      myNote=m.note.Note( name=curNoteName
-                         ,quarterLength=curNotequarterDurationY
-                         ,octave=curNoteOctave
-                         ,offset=itrOffset
-                         #,type="quarter"  
-                        )
-    '''
-    # myMeasure.insert(cnt, myNote)
-    myPart_UpperStaff.insert(cnt, myNote) # if you use a time signature object without a measure object then because of the time signature measures
-                                          #  are filled automaticaly by notes based on its note duration
+    # if you use a time signature object without a measure object then because of
+    # the time signature measures are filled automatically by notes based on
+    # its note duration
+    myPart_UpperStaff.insert(cnt, myNote) 
     noteCount=noteCount+1      
     cnt=cnt+1
     print("cnt:", cnt)  
@@ -359,17 +272,21 @@ else:
   # Unbalanced Score
   print("Program error: Score not balanced")  
 
-# debug: Check all element e processed  ok => X_new.shape[0] = cnt
-# #print("X_new.shape[0]", X_new.shape[0], "cnt:", cnt)
-
-
-# c = m.converter.parse('tinynotation: 4/4 c4 d4 d4 f4 g4 a4 b4. ') # 1st letter lowercase => treblecleff, 1st letter uppercase => bass cleff
-# estimatedScore.insert(0, c)
-
 estimatedScore.insert(1, myPart_UpperStaff)
-#estimatedScore.insert(2, myPart_LowerStaff)
 
 
-print("ToDo: All Notes available. See problem above")
+# *** Add a dummy LowerStaff with a dummy rest to create a Grand piano staff ***
+# When more staves are used, all staves
+# must be filled, before append to the total stream,
+# otherwise you get a corrupted stream when
+# empty staves are added to the total stream.
+dummyRest = m.note.Rest()
+dummyRest.duration.type='quarter'
+myPart_LowerStaff.insert(cnt, dummyRest)
+# If you do not want a grand staff comment statement below 
+estimatedScore.insert(2, myPart_LowerStaff)
+
+
+
 estimatedScore.show() 
 # estimatedScore.show('text') 
