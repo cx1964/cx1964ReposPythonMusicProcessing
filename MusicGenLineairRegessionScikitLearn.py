@@ -20,22 +20,20 @@
 # - all capitals for constants
 # - no Cammel case or Pascal case bu use underscores for compound concepts
 # 
-# Refactor2
+# Refactor1
 # Refactor this source file so
-# that it gets a seprate funnction which creates a estimated score. 
+# that it gets a seperate funnction which creates a estimated score. 
 # Input Params de estimated X en Y arrays with music information 
 
-# ToDo3
-# Add meta data in create estimated score
-# Score title
-# Score subtitle
-# Author
+# # Refactor2
+# Use key signature and time signature for estimated score from imput file. 
 
-# ToDo4
+# ToDo3
 # Create a copy of this source and use a polynomial regression (Nonlinear regression) in stead of a linear regression.
 # https://towardsdatascience.com/machine-learning-with-python-easy-and-robust-method-to-fit-nonlinear-data-19e8a1ddbd49
 
 # standard modules
+from datetime import date
 import numpy as np
 from sklearn.linear_model import LinearRegression
 
@@ -147,9 +145,14 @@ for r in Y_pred:
 # https://web.mit.edu/music21/doc/usersGuide/usersGuide_06_stream2.html
 estimatedScore = m.stream.Stream()
 
+# Set Meta Data in estimated score
 meta_data = m.metadata.Metadata()
 meta_data.title = SCORE_TITLE
-meta_data.composer=COMPOSER
+today = date.today()
+# YYYY/mm/dd
+d1 = today.strftime("%d/%m/%Y")
+meta_data.date = str(d1)
+meta_data.composer = COMPOSER+" ("+str(d1)+")"
 
 timeSignature=m.meter.TimeSignature(TIME_SIGNATURE_STRING)
 upperStaffClef=m.clef.TrebleClef()
