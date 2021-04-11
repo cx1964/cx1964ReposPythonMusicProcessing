@@ -172,7 +172,7 @@ for r in Y_pred:
 
 
 # Constants
-timeSignatureString='4/4'
+timeSignatureString='3/4'
 keySignature=m.key.Key('F') #  lowercase = c minor. uppercase = C major
 timeSignature=m.meter.TimeSignature(timeSignatureString)
 upperStaffClef=m.clef.TrebleClef()
@@ -199,7 +199,8 @@ myPart_LowerStaff.append(timeSignature)
 # set keySignature LowerStaff
 myPart_LowerStaff.append(keySignature)
 
-myMeasure = m.stream.Measure()
+# don't use a Measure object
+#myMeasure = m.stream.Measure()
 myNote = m.note.Note()
 
 myPart_UpperStaff.partName="Piano Upper"
@@ -252,7 +253,7 @@ if (X_new.shape[0] == Y_pred.shape[0]):
     #print("curNoteOctave", curNoteOctave)
 
     # Process quarterDuration
-    curNotequarterDurationY = mu.roundTo(note_properties[2], base)
+    curNotequarterDuration = mu.roundTo(note_properties[2], base)
 
     #itrNote.name = curNoteName
     #itrNote.octave = curNoteOctave
@@ -265,6 +266,14 @@ if (X_new.shape[0] == Y_pred.shape[0]):
     print("ToDo itrMeasure=", itrMeasure, "itrOffset:", itrOffset)
     #myMeasure=m.stream.Measure(number=1)
     #note.type={whole, half, quarter}
+
+    myNote=m.note.Note( name=curNoteName
+                       ,quarterLength=curNotequarterDuration
+                       ,octave=curNoteOctave
+                       ,offset=itrOffset
+                       #,type="quarter"  # use quarterLength or type not both
+                      )
+
 
     '''                       
     myNote=m.note.Note( name="a"    # curNoteName
@@ -305,8 +314,9 @@ if (X_new.shape[0] == Y_pred.shape[0]):
     #                                                                                          ============
     # instead using Measure value from  itrMeasure=int(e[0]).
     # ======= 
+    print("count in each measure til (beatCount):",timeSignature.beatCount, " TimeSignature.numerator:",timeSignature.numerator," TimeSignature.denominator:",timeSignature.denominator)
 
-
+    '''
     # Try to detect when a measure changes 
     if curMeasure != itrMeasure:
       # Measuer is changed
@@ -338,7 +348,10 @@ if (X_new.shape[0] == Y_pred.shape[0]):
                          ,offset=itrOffset
                          #,type="quarter"  
                         )
-    myMeasure.insert(cnt, myNote)
+    '''
+    # myMeasure.insert(cnt, myNote)
+    myPart_UpperStaff.insert(cnt, myNote) # if you use a time signature object without a measure object then because of the time signature measures
+                                          #  are filled automaticaly by notes based on its note duration
     noteCount=noteCount+1      
     cnt=cnt+1
     print("cnt:", cnt)  
@@ -354,9 +367,9 @@ else:
 # estimatedScore.insert(0, c)
 
 estimatedScore.insert(1, myPart_UpperStaff)
-estimatedScore.insert(2, myPart_LowerStaff)
+#estimatedScore.insert(2, myPart_LowerStaff)
 
 
 print("ToDo: All Notes available. See problem above")
 estimatedScore.show() 
-#estimatedScore.show('text') 
+# estimatedScore.show('text') 
