@@ -8,10 +8,10 @@
 # Naming conventions: https://visualgit.readthedocs.io/en/latest/pages/naming_convention.html
 # cx1964 20210411
 
-# ToDo1: 
-#  
-# Use the same time signature and key signature for estimated score as used
-# in input file. 
+
+# ToDo1:
+# Function import_musicxml_file can now only process a input file with one stave.
+# Extent this function, so it is able to process a grant staff which contains 2 staves
 
 # ToDo2:
 #
@@ -45,8 +45,6 @@ import my_uilities as mu
 
 # Constants
 # Status Naming conventions Constants: 
-TIME_SIGNATURE_STRING='3/4'
-KEY_SIGNATURE=m.key.Key('F') #  lowercase = c minor. uppercase = C major
 BASE = 0.25 # round Note durations to multiples of base factors. Round 1/4 notes to base=0.25 and 1/8 notes to base=0.125 0.0625, 0,03125 etc
 SCOREPATH = "/home/claude/Documents/sources/python/python3/cx1964ReposPythonMusicProcessing"
 # Export de MuseScore File in musicxml (uncompressed music xml format musicxml extention)
@@ -70,7 +68,7 @@ env['musicxmlPath'] = MUSESCOREPROGPATH+MUSESCOREPROG
 
 # Import musicfile in musicxml format and
 # fill numpy arrays X and Y
-X, Y = mu.import_musicxml_file(SCOREPATH, MUSESCOREFILE)
+X, Y, time_signature_input_file, key_signature_input_file = mu.import_musicxml_file(SCOREPATH, MUSESCOREFILE)
 
 # The class sklearn.linear_model.LinearRegression will be used to perform
 # linear and polynomial regression and make predictions accordingly.
@@ -154,7 +152,6 @@ d1 = today.strftime("%d/%m/%Y")
 meta_data.date = str(d1)
 meta_data.composer = COMPOSER+" ("+str(d1)+")"
 
-timeSignature=m.meter.TimeSignature(TIME_SIGNATURE_STRING)
 upperStaffClef=m.clef.TrebleClef()
 lowerStaffClef=m.clef.BassClef()
 
@@ -162,18 +159,22 @@ myPart = m.stream.Part()
 myPart_UpperStaff = m.stream.Part()
 # set Clef UpperStaff
 myPart_UpperStaff.append(upperStaffClef)
+
 # set TimeSignature UpperStaff
-myPart_UpperStaff.append(timeSignature)
+myPart_UpperStaff.append(time_signature_input_file)
+
 # set keySignature UpperStaff
-myPart_UpperStaff.append(KEY_SIGNATURE)
+myPart_UpperStaff.append(key_signature_input_file)
 
 myPart_LowerStaff = m.stream.Part()
 # set Clef UpperStaff
 myPart_LowerStaff.append(lowerStaffClef)
+
 # set TimeSignature LowerStaff
-myPart_LowerStaff.append(timeSignature)
+myPart_LowerStaff.append(time_signature_input_file)
+
 # set keySignature LowerStaff
-myPart_LowerStaff.append(KEY_SIGNATURE)
+myPart_LowerStaff.append(key_signature_input_file)
 
 # Do not use a Measure object
 # If you use a Time Signature object without a Measure object
@@ -242,12 +243,13 @@ dummyRest = m.note.Rest()
 dummyRest.duration.type='quarter'
 myPart_LowerStaff.insert(cnt, dummyRest)
 # If you do not want a grand staff comment statement below 
-estimatedScore.insert(2, myPart_LowerStaff)
+# ToDo problem with creating lowerStaff !!!!!!!!!!!!!!!!!!!!!!
+##estimatedScore.insert(2, myPart_LowerStaff)
 
 
 
 estimatedScore.show() 
-# estimatedScore.show('text') 
+#estimatedScore.show('text') 
 
 # parse Stream structure of musicfile 
 # for thing in myScore:

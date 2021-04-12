@@ -4,6 +4,8 @@
 #           python Scikit-learn module is used.
 #           Music data is processed with music21 python module
 # Documentation: For multi variant regresion see https://realpython.com/linear-regression-in-python/
+#
+# Naming conventions: https://visualgit.readthedocs.io/en/latest/pages/naming_convention.html
 # cx1964 20210411
 
 # ToDo1: 
@@ -17,48 +19,42 @@
 # Apply standard python naming conventions:
 # - all capitals for constants
 # - no Cammel case or Pascal case bu use underscores for compound concepts
-#
+# 
 # Refactor1
 # Refactor this source file so
-# that it gets a seperate function to read the input file. Input Params scorePath, scoreFile
-# and returns the X en Y arrays with music information for the machine learning proces.
-# 
-# Refactor2
-# Refactor this source file so
-# that it gets a seprate funnction which creates a estimated score. 
+# that it gets a seperate funnction which creates a estimated score. 
 # Input Params de estimated X en Y arrays with music information 
 
-# ToDo3
-# Add meta data in create estimated score
-# Score title
-# Score subtitle
-# Author
+# # Refactor2
+# Use key signature and time signature for estimated score from imput file. 
 
-# ToDo4
-# Create a copy of this source and use a Nonlinear regression in stead of a linear regression.
+# ToDo3
+# Create a copy of this source and use a polynomial regression (Nonlinear regression) in stead of a linear regression.
 # https://towardsdatascience.com/machine-learning-with-python-easy-and-robust-method-to-fit-nonlinear-data-19e8a1ddbd49
 
 # standard modules
-import music21 as m
+from datetime import date
 import numpy as np
+from sklearn.linear_model import LinearRegression
+
+import music21 as m
 # project specific own modules
 import noteconversion as nc
 import my_uilities as mu
 
 
 # Constants
-timeSignatureString='3/4'
-keySignature=m.key.Key('F') #  lowercase = c minor. uppercase = C major
-
-musescoreProg='MuseScore-3.6.2.548021370-x86_64_461d9f78f967c0640433c95ccb200785.AppImage'
-scorePath = "/home/claude/Documents/sources/python/python3/cx1964ReposPythonMusicProcessing"
+# Status Naming conventions Constants: 
+TIME_SIGNATURE_STRING='3/4'
+KEY_SIGNATURE=m.key.Key('F') #  lowercase = c minor. uppercase = C major
+BASE = 0.25 # round Note durations to multiples of base factors. Round 1/4 notes to base=0.25 and 1/8 notes to base=0.125 0.0625, 0,03125 etc
+SCOREPATH = "/home/claude/Documents/sources/python/python3/cx1964ReposPythonMusicProcessing"
 # Export de MuseScore File in musicxml (uncompressed music xml format musicxml extention)
-museScoreFile3 = "C_major_scale_ascending_mixed_duration.musicxml" # in musicxml uncompressed
-
-base = 0.25 # round Note durations to multiples of base factors. Round 1/4 notes to base=0.25 and 1/8 notes to base=0.125 0.0625, 0,03125 etc
-
-
-
+MUSESCOREFILE = "C_major_scale_ascending_mixed_duration.musicxml" # in musicxml uncompressed
+MUSESCOREPROG='MuseScore-3.6.2.548021370-x86_64_461d9f78f967c0640433c95ccb200785.AppImage'
+MUSESCOREPROGPATH='/home/claude/Applications/'
+SCORE_TITLE="python3 Machine learning Generated Sheetmusic "
+COMPOSER="cx1964"
 
 # See: https://web.mit.edu/music21/doc/usersGuide/usersGuide_24_environment.html#usersguide-24-environment
 # See: https://web.mit.edu/music21/doc/usersGuide/usersGuide_24_environment.html
@@ -69,63 +65,15 @@ env.create()
 env['autoDownload'] = 'allow'
 #env['lilypondPath'] = '/usr/bin/lilypond'
 #env['musescoreDirectPNGPath'] = '/usr/bin/musescore3'
-env['musicxmlPath'] = '/home/claude/Applications/'+musescoreProg
-
-myScore3 = m.converter.parse(scorePath+'/'+museScoreFile3, format='musicxml')
+env['musicxmlPath'] = MUSESCOREPROGPATH+MUSESCOREPROG
 
 
-time_list = []
-note_property_list=[]
+# Import musicfile in musicxml format and
+# fill numpy arrays X and Y
+X, Y = mu.import_musicxml_file(SCOREPATH, MUSESCOREFILE)
 
-# parse Stream structure of musicfile 
-#for thing in myScore:
-#    print(thing)
-
-# Alternative
-#myScore.show('text')  
-
-# https://web.mit.edu/music21/doc/usersGuide/usersGuide_06_stream2.html
-
-
-for e3 in myScore3.recurse().notes:
-    # Encoding X
-    # Fill time
-    time_list.append(e3.measureNumber)      
-    time_list.append(e3.offset) 
-    #print("Time_list iter:", time_list)
-
-    # Encoding Y 
-    # Fill note properties
-    note_property_list.append(nc.getNoteValue(e3.name))
-    note_property_list.append(e3.octave)
-    note_property_list.append(e3.duration.quarterLength)
-    #print("Note_property_list iter:", note_property_list)
-
-# Create 2 dimensional array for the time list with 2 elements per row
-# First index -1 creates dynamically an amount off rows based on the size of the time list
-X = np.array(time_list).reshape(-1, 2)
-print("X.shape",X.shape)
-print(X)
-
-# Create 2 dimension array for the note property list with 3 elements per row
-# First index -1 creates dynamically an amount off rows based on the size of the note list
-Y = np.array(note_property_list).reshape(-1, 3)
-print("Y.shape",Y.shape)
-print(Y)
-
-# Step 1: Import packages and classes
-import numpy as np
-from sklearn.linear_model import LinearRegression
-
-# The fundamental data type of NumPy is the array type called numpy.ndarray.
-# The rest of this article uses the term array to refer to instances of the
-# type numpy.ndarray.
 # The class sklearn.linear_model.LinearRegression will be used to perform
 # linear and polynomial regression and make predictions accordingly.
-
-# Step 2: Provide data
-# for X and Y  see above
-
 
 # Step 3: Create a model and fit it
 mdl = LinearRegression()
@@ -187,15 +135,26 @@ for r in Y_pred:
 
     # toDo round to a 0.25 resolution because input used 1/4 notes
     t=r[2]
-    base=0.25
-    v=t + (base - t) % base 
+    BASE=0.25
+    v=t + (BASE - t) % BASE
     print(nc.getNoteName(int(round(r[0])), enharmonic=False),int(round(r[1])), v)
 
 
 # *** Create the score with estimated notes ***
 # *********************************************
+# https://web.mit.edu/music21/doc/usersGuide/usersGuide_06_stream2.html
 estimatedScore = m.stream.Stream()
-timeSignature=m.meter.TimeSignature(timeSignatureString)
+
+# Set Meta Data in estimated score
+meta_data = m.metadata.Metadata()
+meta_data.title = SCORE_TITLE
+today = date.today()
+# YYYY/mm/dd
+d1 = today.strftime("%d/%m/%Y")
+meta_data.date = str(d1)
+meta_data.composer = COMPOSER+" ("+str(d1)+")"
+
+timeSignature=m.meter.TimeSignature(TIME_SIGNATURE_STRING)
 upperStaffClef=m.clef.TrebleClef()
 lowerStaffClef=m.clef.BassClef()
 
@@ -206,7 +165,7 @@ myPart_UpperStaff.append(upperStaffClef)
 # set TimeSignature UpperStaff
 myPart_UpperStaff.append(timeSignature)
 # set keySignature UpperStaff
-myPart_UpperStaff.append(keySignature)
+myPart_UpperStaff.append(KEY_SIGNATURE)
 
 myPart_LowerStaff = m.stream.Part()
 # set Clef UpperStaff
@@ -214,7 +173,7 @@ myPart_LowerStaff.append(lowerStaffClef)
 # set TimeSignature LowerStaff
 myPart_LowerStaff.append(timeSignature)
 # set keySignature LowerStaff
-myPart_LowerStaff.append(keySignature)
+myPart_LowerStaff.append(KEY_SIGNATURE)
 
 # Do not use a Measure object
 # If you use a Time Signature object without a Measure object
@@ -246,7 +205,7 @@ if (X_new.shape[0] == Y_pred.shape[0]):
     #print("curNoteOctave", curNoteOctave)
 
     # Process quarterDuration
-    curNotequarterDuration = mu.roundTo(note_properties[2], base)
+    curNotequarterDuration = mu.roundTo(note_properties[2], BASE)
 
     itrMeasure=int(e[0])
     itrOffset=e[1]
@@ -270,6 +229,7 @@ else:
   # Unbalanced Score
   print("Program error: Score not balanced")  
 
+estimatedScore.insert(0, meta_data)
 estimatedScore.insert(1, myPart_UpperStaff)
 
 
@@ -288,3 +248,8 @@ estimatedScore.insert(2, myPart_LowerStaff)
 
 estimatedScore.show() 
 # estimatedScore.show('text') 
+
+# parse Stream structure of musicfile 
+# for thing in myScore:
+#     print(thing)
+   
