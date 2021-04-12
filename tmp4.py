@@ -10,6 +10,11 @@
 # Naming conventions: https://visualgit.readthedocs.io/en/latest/pages/naming_convention.html
 # cx1964 20210411
 
+
+# ToDo0:
+# Function import_musicxml_file can now only process a input file with one stave.
+# Extent this function, so it is able to process a grant staff which contains 2 staves
+
 # ToDo1: 
 #  
 # Use the same time signature and key signature for estimated score as used
@@ -72,7 +77,7 @@ env['musicxmlPath'] = MUSESCOREPROGPATH+MUSESCOREPROG
 
 # Import musicfile in musicxml format and
 # fill numpy arrays X and Y
-X, Y, time_signature_input_file = mu.import_musicxml_file(SCOREPATH, MUSESCOREFILE)
+X, Y, time_signature_input_file, key_signature_input_file = mu.import_musicxml_file(SCOREPATH, MUSESCOREFILE)
 
 # The class sklearn.linear_model.LinearRegression will be used to perform
 # linear and polynomial regression and make predictions accordingly.
@@ -170,7 +175,8 @@ myPart_UpperStaff.append(upperStaffClef)
 myPart_UpperStaff.append(time_signature_input_file)
 
 # set keySignature UpperStaff
-myPart_UpperStaff.append(KEY_SIGNATURE)
+#myPart_UpperStaff.append(KEY_SIGNATURE)
+myPart_UpperStaff.append(key_signature_input_file)
 
 myPart_LowerStaff = m.stream.Part()
 # set Clef UpperStaff
@@ -182,7 +188,8 @@ myPart_LowerStaff.append(time_signature_input_file)
 
 
 # set keySignature LowerStaff
-myPart_LowerStaff.append(KEY_SIGNATURE)
+#myPart_LowerStaff.append(KEY_SIGNATURE)
+myPart_LowerStaff.append(key_signature_input_file)
 
 # Do not use a Measure object
 # If you use a Time Signature object without a Measure object
