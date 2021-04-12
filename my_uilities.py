@@ -31,7 +31,14 @@ def import_musicxml_file(scorePath, museScoreFile):
     """
 
     myScore = m.converter.parse(scorePath+'/'+museScoreFile, format='musicxml')
-     
+    print("Hier")
+    
+    # Get used TimeSignature of input file
+    for e in myScore.recurse().getElementsByClass('TimeSignature'):   # meter.timeSignature:
+        print("time signature score:  ", e)
+    used_time_signature = e # Because of grant staff only use the last
+
+
     time_list = []
     note_property_list=[]
      
@@ -61,4 +68,4 @@ def import_musicxml_file(scorePath, museScoreFile):
     #print("Y.shape",Y.shape)
     #print(Y)
     
-    return(X, Y) # import_musicxml_file 
+    return(X, Y, used_time_signature) # import_musicxml_file 
