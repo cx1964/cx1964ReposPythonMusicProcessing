@@ -1,6 +1,7 @@
 # file: my_uilities.copy
 # function: miscellaneous utility functions
 
+import sys
 from datetime import date
 import numpy as np
 
@@ -21,8 +22,9 @@ def roundTo(numberValue, baseValue):
 
 def import_musicxml_file(scorePath, museScoreFile):
     """
-    Import musicfile in musicxml format and
-    Return numpy arrays X and Y with musical information
+    Imports a musicfile in musicxml format. 
+    
+    Returns numpy arrays X and Y with musical information, the key- and time signature and the smallest quarter note duration in the input musicxml file.
     X contains measure number
     Y contains offest in current measure
    
@@ -45,7 +47,8 @@ def import_musicxml_file(scorePath, museScoreFile):
 
     time_list = []
     note_property_list=[]
-     
+    smallest_quarterlength=sys.float_info.max
+
     for element in myScore.recurse().notes:
         # Encoding X
         # Fill time
@@ -58,6 +61,9 @@ def import_musicxml_file(scorePath, museScoreFile):
         note_property_list.append(nc.getNoteValue(element.name))
         note_property_list.append(element.octave)
         note_property_list.append(element.duration.quarterLength)
+        # search smallest quarterlength
+        if element.duration.quarterLength < smallest_quarterlength:
+           smallest_quarterlength = element.duration.quarterLength
         #print("Note_property_list iter:", note_property_list)
     
     # Create 2 dimensional array for the time list with 2 elements per row
@@ -72,7 +78,7 @@ def import_musicxml_file(scorePath, museScoreFile):
     #print("Y.shape",Y.shape)
     #print(Y)
     
-    return(X, Y, used_time_signature, used_key_signature) # import_musicxml_file 
+    return(X, Y, used_time_signature, used_key_signature, smallest_quarterlength) # import_musicxml_file 
 
 
 
