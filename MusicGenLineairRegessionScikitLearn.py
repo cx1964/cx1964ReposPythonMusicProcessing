@@ -41,7 +41,7 @@ import my_uilities as mu
 
 # Constants
 # Status Naming conventions Constants: 
-BASE = 0.25 # round Note durations to multiples of base factors. Round 1/4 notes to base=0.25 and 1/8 notes to base=0.125 0.0625, 0,03125 etc
+# BASE = 0.25 # round Note durations to multiples of base factors. Round 1/4 notes to base=0.25 and 1/8 notes to base=0.125 0.0625, 0,03125 etc
 SCOREPATH = "/home/claude/Documents/sources/python/python3/cx1964ReposPythonMusicProcessing"
 # Export de MuseScore File in musicxml (uncompressed music xml format musicxml extention)
 MUSESCOREFILE = "C_major_scale_ascending_mixed_duration.musicxml" # in musicxml uncompressed
@@ -64,7 +64,9 @@ env['musicxmlPath'] = MUSESCOREPROGPATH+MUSESCOREPROG
 
 # Import musicfile in musicxml format and
 # fill numpy arrays X and Y
-X, Y, time_signature_input_file, key_signature_input_file = mu.import_musicxml_file(SCOREPATH, MUSESCOREFILE)
+#X, Y, time_signature_input_file, key_signature_input_file = mu.import_musicxml_file(SCOREPATH, MUSESCOREFILE)
+X, Y, time_signature_input_file, key_signature_input_file, smallest_quarter_duration = mu.import_musicxml_file(SCOREPATH, MUSESCOREFILE)
+print("smallest_quarter_duration:", smallest_quarter_duration)
 
 # The class sklearn.linear_model.LinearRegression will be used to perform
 # linear and polynomial regression and make predictions accordingly.
@@ -125,16 +127,15 @@ print('\n\nPredicted response in numeric values Y_pred:', Y_pred, sep='\n')
 
 estimatedScore = mu.create_estimated_score(  X_new
                                             ,Y_pred
-                                            ,BASE
+                                            ,smallest_quarter_duration
                                             ,time_signature_input_file
                                             ,key_signature_input_file
                                             ,SCORE_TITLE
                                             ,COMPOSER
                                           )
 estimatedScore.show() 
-# estimatedScore.show('text') 
+#estimatedScore.show('text') 
 
 # parse Stream structure of musicfile 
 # for thing in myScore:
 #     print(thing)
-   
