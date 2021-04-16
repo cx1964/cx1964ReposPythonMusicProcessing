@@ -64,9 +64,8 @@ env['musicxmlPath'] = MUSESCOREPROGPATH+MUSESCOREPROG
 
 # Import musicfile in musicxml format and
 # fill numpy arrays X and Y
-#X, Y, time_signature_input_file, key_signature_input_file = mu.import_musicxml_file(SCOREPATH, MUSESCOREFILE)
 X, Y, time_signature_input_file, key_signature_input_file, smallest_quarter_duration = mu.import_musicxml_file(SCOREPATH, MUSESCOREFILE)
-print("smallest_quarter_duration:", smallest_quarter_duration)
+#print("smallest_quarter_duration:", smallest_quarter_duration)
 
 # The class sklearn.linear_model.LinearRegression will be used to perform
 # linear and polynomial regression and make predictions accordingly.
@@ -133,8 +132,8 @@ estimatedScore = mu.create_estimated_score(  X_new
                                             ,SCORE_TITLE
                                             ,COMPOSER
                                           )
-estimatedScore.show() 
-#estimatedScore.show('text') 
+#estimatedScore.show() 
+estimatedScore.show('text') 
 
 # parse Stream structure of musicfile 
 # for thing in myScore:

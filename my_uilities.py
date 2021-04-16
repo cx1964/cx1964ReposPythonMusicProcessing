@@ -22,8 +22,9 @@ def roundTo(numberValue, baseValue):
 
 def import_musicxml_file(scorePath, museScoreFile):
     """
-    Imports a musicfile in musicxml format. 
-    
+    Imports a musicfile in musicxml format.
+    This function can only process max 2 parts (= staves) 
+
     Returns numpy arrays X and Y with musical information, the key- and time signature and the smallest quarter note duration in the input musicxml file.
     X contains measure number
     Y contains offest in current measure
@@ -34,7 +35,14 @@ def import_musicxml_file(scorePath, museScoreFile):
     """
 
     myScore = m.converter.parse(scorePath+'/'+museScoreFile, format='musicxml')
+    num_parts=get_number_of_parts(myScore)
+    print("number_of_parts:",num_parts)
     
+    # Limit max Parts that can be processed 
+    if num_parts > 2:
+       sys.exit("Error: this program can only process max 2 parts input musicxml file!\nProgram aborted.") 
+
+
     # Get used TimeSignature of input file
     for e in myScore.recurse().getElementsByClass('TimeSignature'):   # meter.timeSignature:
         print("time signature score:  ", e)
@@ -223,3 +231,18 @@ def create_estimated_score(  X_new
     ##estimatedScore.insert(2, myPart_LowerStaff)
     
     return(estimatedScore) # create_estimated_score
+
+
+def get_number_of_parts(score):
+    """
+    Determine the amount of parts in the score
+    Returns a number for the amount of parts in the score
+
+    Params
+    score  a score object
+    """   
+    number_of_parts = 0
+    for e in score.recurse().parts:
+        number_of_parts = number_of_parts + 1
+
+    return( number_of_parts ) # get_number_of_parts   
