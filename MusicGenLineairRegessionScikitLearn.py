@@ -9,13 +9,10 @@
 # cx1964 20210411
 
 
-# ToDo1:
-# Function import_musicxml_file can now only process a input file with one stave.
-# Extent this function, so it is able to process a grant staff which contains 2 staves
-# See the code in the import_musicxml_file function which determines the TimeSignature em KeySignature of input file
-# use myScore.recurse().getElementsByClass() to find the Part objects in score stream of the upper and lower staves.
-# Break the loop when more then 2 staves are found 
-
+# ToDo1: 
+# fuse estimatedPart0 and estimatedPart1 to estimatedScore
+# rebuild create_estimated_score
+# see code below
 
 # ToDo2:
 #
@@ -64,7 +61,28 @@ env['musicxmlPath'] = MUSESCOREPROGPATH+MUSESCOREPROG
 
 # Import musicfile in musicxml format and
 # fill numpy arrays X and Y
-X, Y, time_signature_input_file, key_signature_input_file, smallest_quarter_duration = mu.import_musicxml_file(SCOREPATH, MUSESCOREFILE)
+#old:   X, Y, time_signature_input_file, key_signature_input_file, smallest_quarter_duration = mu.import_musicxml_file(SCOREPATH, MUSESCOREFILE)
+music_info_dict = mu.import_musicxml_file_idea(SCOREPATH, MUSESCOREFILE)
+# for e in music_info_dict.keys():
+#    print("main prog: e", e)
+# get info from dict music_info_dict
+time_signature0 = music_info_dict['time_signature0']
+key_signature0 = music_info_dict['key_signature0']
+smallest_quarterlength0 = music_info_dict['smallest_quarterlength0']
+X0 = music_info_dict['X0']
+Y0 = music_info_dict['Y0']
+time_signature1 = music_info_dict['time_signature1']
+key_signature1 = music_info_dict['key_signature1']
+smallest_quarterlength1 = music_info_dict['smallest_quarterlength1']
+X1 = music_info_dict['X1']
+Y1 = music_info_dict['Y1']
+
+
+#ToDo Change code below:
+# 
+# X, Y, time_signature_input_file, key_signature_input_file, smallest_quarter_duration = ????
+
+
 #print("smallest_quarter_duration:", smallest_quarter_duration)
 
 # The class sklearn.linear_model.LinearRegression will be used to perform
@@ -88,10 +106,12 @@ mdl = LinearRegression()
 # This example uses the default values of all parameters.
 #
 # It’s time to start using the model. First, you need to call .fit() on model:
-model = mdl.fit(X, Y)
+model0 = mdl.fit(X0, Y0)
+model1 = mdl.fit(X1, Y1)
 
 # Step 4: Get results
-r_sq = model.score(X, Y)
+r_sq0 = model0.score(X0, Y0)
+r_sq1 = model1.score(X1, Y1)
 # print('coefficient of determination:', r_sq)
 # coefficient of determination: ???
 
@@ -112,7 +132,8 @@ r_sq = model.score(X, Y)
 
 # You should notice that you can provide y as a two-dimensional array as well.
 # In this case, you’ll get a similar result. This is how it might look:
-new_model = LinearRegression().fit(X, Y)
+new_model0 = LinearRegression().fit(X0, Y0)
+new_model1 = LinearRegression().fit(X1, Y1)
 
 # Step 5: Predict response
 # Once there is a satisfactory model, you can use it for predictions with either existing or new data.
@@ -120,20 +141,41 @@ new_model = LinearRegression().fit(X, Y)
 # To obtain the predicted response, use .predict():
 print("\n\n")
 print("Tempory solution voor X_new")
-X_new = X # ToDo: create better way to fill X_new
-Y_pred = model.predict(X_new)
-print('\n\nPredicted response in numeric values Y_pred:', Y_pred, sep='\n')
+X_new0 = X0 # ToDo: create better way to fill X_new0
+X_new1 = X1 # ToDo: create better way to fill X_new1
+Y_pred0 = model0.predict(X_new0)
+Y_pred1 = model1.predict(X_new1)
+print('\n\nPredicted response in numeric values Y_pred0:', Y_pred0, sep='\n')
+print('\n\nPredicted response in numeric values Y_pred1:', Y_pred1, sep='\n')
 
-estimatedScore = mu.create_estimated_score(  X_new
-                                            ,Y_pred
-                                            ,smallest_quarter_duration
-                                            ,time_signature_input_file
-                                            ,key_signature_input_file
+estimatedPart0 = mu.create_estimated_score(  X_new0
+                                            ,Y_pred0
+                                            ,smallest_quarterlength0
+                                            ,time_signature0
+                                            ,key_signature0
                                             ,SCORE_TITLE
                                             ,COMPOSER
                                           )
+
+estimatedPart1 = mu.create_estimated_score(  X_new1
+                                            ,Y_pred1
+                                            ,smallest_quarterlength1
+                                            ,time_signature1
+                                            ,key_signature1
+                                            ,SCORE_TITLE
+                                            ,COMPOSER
+                                          )
+
+# ToDo: 
+# fuse estimatedPart0 and estimatedPart1 to estimatedScore
+# rebuild create_estimated_score
+
+#estimatedPart0.show('text')
+estimatedPart0.show()
+#estimatedPart1.show()
+
 #estimatedScore.show() 
-estimatedScore.show('text') 
+#estimatedScore.show('text') 
 
 # parse Stream structure of musicfile 
 # for thing in myScore:

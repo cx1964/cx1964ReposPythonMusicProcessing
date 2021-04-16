@@ -89,6 +89,160 @@ def import_musicxml_file(scorePath, museScoreFile):
     return(X, Y, used_time_signature, used_key_signature, smallest_quarterlength) # import_musicxml_file 
 
 
+def import_musicxml_file_idea(scorePath, museScoreFile):
+    """
+    Imports a musicfile in musicxml format.
+    This function can only process max 2 parts (= staves) 
+
+    Returns numpy arrays X and Y with musical information, the key- and time signature and the smallest quarter note duration in the input musicxml file.
+    X contains measure number
+    Y contains offest in current measure
+   
+    Params
+    scorePath      a string which contains a filepath to input score 
+    museScoreFile  a string which contains the filename of the input music file
+    """
+
+    myScore = m.converter.parse(scorePath+'/'+museScoreFile, format='musicxml')
+    num_parts=get_number_of_parts(myScore)
+    print("number_of_parts:",num_parts)
+    
+    # Limit max Parts that can be processed 
+    if num_parts > 2:
+       sys.exit("Error: this program can only process max 2 parts input musicxml file!\nProgram aborted.") 
+
+    # loop over Parts
+    part_cnt=0
+    music_info=dict()
+    key=''
+    for p in myScore.recurse().parts:
+        for e in p.recurse().getElementsByClass('TimeSignature'):   # meter.timeSignature:
+            print("time signature score:  ", e)
+        used_time_signature = e # Because of grant staff only use the last
+        key='time_signature'+str(part_cnt)
+        print('key:', key)
+        music_info[key]=used_time_signature
+        print('music_info[key]:',music_info[key])
+
+        for e in myScore.recurse().getElementsByClass('KeySignature'):   # meter.timeSignature:
+            print("key signature score:  ", e)
+        used_key_signature = e # Because of grant staff only use the last
+        key='key_signature'+str(part_cnt)
+        print('key:', key)
+        music_info[key]=used_key_signature
+        print('music_info[key]:',music_info[key])
+
+        time_list = []
+        note_property_list=[]
+        smallest_quarterlength=sys.float_info.max
+
+        for element in myScore.recurse().notes:
+            # Encoding X
+            # Fill time
+            time_list.append(element.measureNumber)      
+            time_list.append(element.offset) 
+            #print("Time_list iter:", time_list)
+       
+            # Encoding Y 
+            # Fill note properties
+            note_property_list.append(nc.getNoteValue(element.name))
+            note_property_list.append(element.octave)
+            note_property_list.append(element.duration.quarterLength)
+            # search smallest quarterlength
+            if element.duration.quarterLength < smallest_quarterlength:
+               smallest_quarterlength = element.duration.quarterLength
+            #print("Note_property_list iter:", note_property_list)
+    
+        
+        used_smallest_quarterlength = smallest_quarterlength 
+        key='smallest_quarterlength'+str(part_cnt)
+        print('key:', key)
+        music_info[key]=used_smallest_quarterlength 
+        print('music_info[key]:',music_info[key])
+
+        # Create 2 dimensional array for the time list with 2 elements per row
+        # First index -1 creates dynamically an amount off rows based on the size of the time list
+        X = np.array(time_list).reshape(-1, 2)
+        #print("X.shape",X.shape)
+        #print(X)
+
+        # put in music_info
+        used_X = X 
+        key='X'+str(part_cnt)
+        print('key:', key)
+        music_info[key]=used_X
+        print('music_info[key]:',music_info[key])
+    
+        # Create 2 dimension array for the note property list with 3 elements per row
+        # First index -1 creates dynamically an amount off rows based on the size of the note list
+        Y = np.array(note_property_list).reshape(-1, 3)
+        #print("Y.shape",Y.shape)
+        #print(Y)
+
+        used_Y = Y 
+        key='Y'+str(part_cnt)
+        print('key:', key)
+        music_info[key]=used_Y
+        print('music_info[key]:',music_info[key])
+
+        part_cnt=part_cnt+1
+
+    '''
+    # Get used TimeSignature of input file
+    for e in myScore.recurse().getElementsByClass('TimeSignature'):   # meter.timeSignature:
+        print("time signature score:  ", e)
+    used_time_signature = e # Because of grant staff only use the last
+    ''' 
+    
+    '''
+    # Get used KeySignature of input file
+    for e in myScore.recurse().getElementsByClass('KeySignature'):   # meter.timeSignature:
+        print("key signature score:  ", e)
+    used_key_signature = e # Because of grant staff only use the last
+    '''
+
+    ''' 
+    time_list = []
+    note_property_list=[]
+    smallest_quarterlength=sys.float_info.max
+    '''
+    
+    '''
+    for element in myScore.recurse().notes:
+        # Encoding X
+        # Fill time
+        time_list.append(element.measureNumber)      
+        time_list.append(element.offset) 
+        #print("Time_list iter:", time_list)
+       
+        # Encoding Y 
+        # Fill note properties
+        note_property_list.append(nc.getNoteValue(element.name))
+        note_property_list.append(element.octave)
+        note_property_list.append(element.duration.quarterLength)
+        # search smallest quarterlength
+        if element.duration.quarterLength < smallest_quarterlength:
+           smallest_quarterlength = element.duration.quarterLength
+        #print("Note_property_list iter:", note_property_list)
+    
+    # Create 2 dimensional array for the time list with 2 elements per row
+    # First index -1 creates dynamically an amount off rows based on the size of the time list
+    X = np.array(time_list).reshape(-1, 2)
+    #print("X.shape",X.shape)
+    #print(X)
+    
+    # Create 2 dimension array for the note property list with 3 elements per row
+    # First index -1 creates dynamically an amount off rows based on the size of the note list
+    Y = np.array(note_property_list).reshape(-1, 3)
+    #print("Y.shape",Y.shape)
+    #print(Y)
+    '''
+    
+    '''
+    return(X, Y, used_time_signature, used_key_signature, smallest_quarterlength) # import_musicxml_file_idea 
+    '''
+    return(music_info) # import_musicxml_file_idea 
+
 
 def create_estimated_score(  X_new
                             ,Y_pred
