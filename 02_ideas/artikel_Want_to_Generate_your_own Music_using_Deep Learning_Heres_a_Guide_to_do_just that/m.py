@@ -91,3 +91,126 @@ plt.figure(figsize=(5,5))
 plt.hist(no)
 # show output in a seprate window
 plt.show()
+
+# source form music_5.py
+frequent_notes = [note_ for note_, count in freq.items() if count>=50]
+print("frequent_notes (count>=50):",len(frequent_notes))
+
+new_music=[]
+
+for notes in notes_array:
+    temp=[]
+    for note_ in notes:
+        if note_ in frequent_notes:
+            temp.append(note_)            
+    new_music.append(temp)
+    
+new_music = np.array(new_music, dtype=object)
+
+# source form music_6.py
+no_of_timesteps = 32
+x = []
+y = []
+
+for note_ in new_music:
+    for i in range(0, len(note_) - no_of_timesteps, 1):
+        
+        #preparing input and output sequences
+        input_ = note_[i:i + no_of_timesteps]
+        output = note_[i + no_of_timesteps]
+        
+        x.append(input_)
+        y.append(output)
+        
+x=np.array(x)
+y=np.array(y)
+
+# source from music_7.py
+# Now, we will assign a unique integer to every note:
+unique_x = list(set(x.ravel()))
+x_note_to_int = dict((note_, number) for number, note_ in enumerate(unique_x))
+
+# We will prepare the integer sequences for input data
+#preparing input sequences
+x_seq=[]
+for i in x:
+    temp=[]
+    for j in i:
+        #assigning unique integer to every note
+        temp.append(x_note_to_int[j])
+    x_seq.append(temp)
+    
+x_seq = np.array(x_seq)
+
+
+# Similarly, prepare the integer sequences for output data as well
+unique_y = list(set(y))
+y_note_to_int = dict((note_, number) for number, note_ in enumerate(unique_y)) 
+y_seq=np.array([y_note_to_int[i] for i in y])
+
+# Let us preserve 80% of the data for training and the rest 20% for the evaluation:
+from sklearn.model_selection import train_test_split
+x_tr, x_val, y_tr, y_val = train_test_split(x_seq,y_seq,test_size=0.2,random_state=0)
+
+
+from keras.layers import *
+from keras.models import *
+from keras.callbacks import *
+import keras.backend as K
+
+# source from lstm.py
+# Model Building
+#
+# I have defined 2 architectures here – WaveNet and LSTM.
+# Please experiment with both the architectures to understand the importance of WaveNet architecture.
+
+def lstm():
+  # LSTM architecture  
+  model = Sequential()
+  model.add(LSTM(128,return_sequences=True))
+  model.add(LSTM(128))
+  model.add(Dense(256))
+  model.add(Activation('relu'))
+                              # problem: model.add(Dense(n_vocab))
+  model.add(Dense(n_vocab))   # ????? what is its function????
+                              # use same construct as in WaveNet() in 10_8.py
+                              # model.add(Dense(unique_y)) dit not help !!!
+  model.add(Activation('softmax'))
+  model.compile(loss='sparse_categorical_crossentropy', optimizer='adam')
+  return (model)
+
+# source from 10_8.py
+def WaveNet(): 
+  model = Sequential()
+      
+  #embedding layer
+  model.add(Embedding(len(unique_x), 100, input_length=32,trainable=True)) 
+  
+  model.add(Conv1D(64,3, padding='causal',activation='relu'))
+  model.add(Dropout(0.2))
+  model.add(MaxPool1D(2))
+      
+  model.add(Conv1D(128,3,activation='relu',dilation_rate=2,padding='causal'))
+  model.add(Dropout(0.2))
+  model.add(MaxPool1D(2))
+  
+  model.add(Conv1D(256,3,activation='relu',dilation_rate=4,padding='causal'))
+  model.add(Dropout(0.2))
+  model.add(MaxPool1D(2))
+            
+  #model.add(Conv1D(256,5,activation='relu'))    
+  model.add(GlobalMaxPool1D())
+      
+  model.add(Dense(256, activation='relu'))
+  model.add(Dense(len(unique_y), activation='softmax'))
+      
+  model.compile(loss='sparse_categorical_crossentropy', optimizer='adam')
+  return (model)
+
+
+K.clear_session()
+# config used deep learning model
+# model=lstm() # use lstm() or WaveNet()
+               # beware lstm() in lstm.py does not work yet. Problem with model.add(Dense(n_vocab))
+model=WaveNet() # use lstm() or WaveNet()
+model.summary() 

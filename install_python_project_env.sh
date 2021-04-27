@@ -51,6 +51,8 @@ else
   pipenv install numpy
   pipenv install pytest
   pipenv install sklearn
+  pipenv install keras
+  pipenv install tensorflow
   ## Einde aanpassen ###
 
   # Toon geinstalleerde modules 

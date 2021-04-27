@@ -9,6 +9,8 @@ matplotlib = "*"
 numpy = "*"
 pytest = "*"
 sklearn = "*"
+keras = "*"
+tensorflow = "*"
 
 [dev-packages]
 
