@@ -89,3 +89,5 @@ plt.figure(figsize=(5,5))
 
 #plot
 plt.hist(no)
+# show output in a seprate window
+plt.show()
