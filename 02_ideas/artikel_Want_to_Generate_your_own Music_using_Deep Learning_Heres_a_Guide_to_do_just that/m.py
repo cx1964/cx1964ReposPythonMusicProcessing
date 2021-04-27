@@ -42,7 +42,7 @@ def read_midi(file):
 
 
 
-# source form music_2/py
+# source form music_2.py
 #for listing down the file names
 import os
 
@@ -56,4 +56,36 @@ path='midi_music/' # 'schubert/'
 files=[i for i in os.listdir(path) if i.endswith(".mid")]
 
 #reading each midi file
-notes_array = np.array([read_midi(path+i) for i in files])
+# for usage of dtype=object
+# see also https://stackoverflow.com/questions/65980867/numpy-visibledeprecationwarning-creating-an-ndarray-from-ragged-nested-sequence
+# The object dtype array preserves the type of the inputs.
+notes_array = np.array([read_midi(path+i) for i in files], dtype=object) 
+
+
+# source form music_3.py
+#converting 2D array into 1D array
+notes_ = [element for note_ in notes_array for element in note_]
+
+#No. of unique notes
+unique_notes = list(set(notes_)) # set function returns unique notes
+print("unique_notes:",len(unique_notes))
+
+
+# source form music_4.py
+#importing library
+from collections import Counter
+
+#computing frequency of each note
+freq = dict(Counter(notes_))
+
+#library for visualiation
+import matplotlib.pyplot as plt
+
+#consider only the frequencies
+no=[count for _,count in freq.items()]
+
+#set the figure size
+plt.figure(figsize=(5,5))
+
+#plot
+plt.hist(no)
