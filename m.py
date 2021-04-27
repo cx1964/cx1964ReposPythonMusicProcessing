@@ -214,3 +214,8 @@ K.clear_session()
                # beware lstm() in lstm.py does not work yet. Problem with model.add(Dense(n_vocab))
 model=WaveNet() # use lstm() or WaveNet()
 model.summary() 
+
+# ToDo2
+# Finish from
+# "Define the callback to save the best model during training:"
+# in https://www.analyticsvidhya.com/blog/2020/01/how-to-perform-automatic-music-generation/
