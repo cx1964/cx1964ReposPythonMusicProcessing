@@ -1,4 +1,4 @@
-# file: my_uilities.copy
+# file: my_utilities.py
 # function: miscellaneous utility functions
 
 import sys

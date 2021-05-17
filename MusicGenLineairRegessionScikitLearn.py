@@ -19,7 +19,7 @@ from sklearn.linear_model import LinearRegression
 import music21 as m
 # project specific own modules
 import noteconversion as nc
-import my_uilities as mu
+import my_utilities as mu
 
 
 # Constants
