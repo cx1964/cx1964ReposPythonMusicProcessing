@@ -9,22 +9,8 @@
 # cx1964 20210411
 
 
-# ToDo1: 
-# fuse estimatedPart0 and estimatedPart1 to estimatedScore
-# rebuild create_estimated_score
-# see code below
-
-# ToDo2:
-#
-# Refactor0
-# Apply standard python naming conventions:
-# - all capitals for constants
-# - no Cammel case or Pascal case bu use underscores for compound concepts
-
-
-# ToDo3
-# Create a copy of this source and use a polynomial regression (Nonlinear regression) in stead of a linear regression.
-# https://towardsdatascience.com/machine-learning-with-python-easy-and-robust-method-to-fit-nonlinear-data-19e8a1ddbd49
+#ToDo
+# zie de ToDos in README.md
 
 # standard modules
 import numpy as np
