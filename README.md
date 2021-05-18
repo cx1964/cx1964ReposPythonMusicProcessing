@@ -11,7 +11,8 @@ ToDo1:
         - input van LSTM moet altijd een 3 dimensional shape zijn met [batch_size, timesteps, aantal features]
         - aantal_featuers wordt 3
         - Zie hoofdstuk 5.2 van "Long Short-Term Memory Networks With Python" om te bepalen welke LSTM men het
-          beste kan gebruiken
+          beste kan gebruiken. Zie ook paragraaf 5.4. mbt de keuze tav de cardinaliteit van het te gebruiken LSTM
+          model. Letop de cardinaliteit gaat niet over features maar over time steps. Dwz dat tijd bestaat uit maatnummer en offset binnen een maat, wil niet zeggen dat het een multi model is. 
         - timesteps wordt lengte van het stuk, dwz het aantal elementen in X 
 
 ToDo1: 
