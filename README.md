@@ -10,6 +10,8 @@ ToDo1:
         - checken of X (=de encode tijd) dan evenveel  waarden heeft als de Y
         - input van LSTM moet altijd een 3 dimensional shape zijn met [batch_size, timesteps, aantal features]
         - aantal_featuers wordt 3
+        - Zie hoofdstuk 5.2 van "Long Short-Term Memory Networks With Python" om te bepalen welke LSTM men het
+          beste kan gebruiken
         - timesteps wordt lengte van het stuk, dwz het aantal elementen in X 
 
 ToDo1: 
