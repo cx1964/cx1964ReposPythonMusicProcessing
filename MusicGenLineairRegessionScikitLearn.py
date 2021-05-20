@@ -5,6 +5,27 @@
 #           Music data is processed with music21 python module
 # Documentation: For multi variant regresion see https://realpython.com/linear-regression-in-python/
 #
+# Opmerking: Letop
+#            Tbv ombouwen van deze source naar een versie die gebruik maakt van LSTM
+#            ipv een Lineair Regession moet men 
+#            niet de X shape van de LTSM gaan vullen met de tijd. Dit is een denk fout. 
+#            Men kan muziek genereren namelijk opvatten als een autocorrelation probleem. 
+#            Waarbij de correlatie binnen het gegeven zelf ligt en aparte relatie is
+#            tussen het gegeven aan de ene kant en de tijd aan de ander kant. Het is dus niet dat x=tijd en y=het gegeven.
+#            Voor de uitleg van het gebruik van time series met autocorrelatie en LSTMS zie de Youtub video
+#            "166 - An introduction to time series forecasting - Part 5 Using LSTM"
+#            https://www.youtube.com/watch?v=97bZKO6cJfg
+#            In deze video wordt gebruik gemaakt van eenvoorbeeld op passasiersgegevens. 
+#            Dit gegeven bevat bavt ook een autocorrelatie. De passagiersaantallen flucteren door de tijd. 
+#            Voor de  X input shape van de LSTM wordt een sequence gebruik van passaiers aantallen 
+#            binnen een bepaald interval (tijdsinterval ti - ti+n-1). Voor de Y input shape wordt 
+#            gebruik gemaakt van een passagiers aantal op tijdstip ti+n. De X input shape bevat dus niet de tijd!.
+#            Als men muziekgeneren ook als time series probleem obv autocorrelatie beschouwd dan
+#            dan moet men de X shape van de LSTM NIET vullen met de tijd (maatgetal en offest binnen de maat),
+#            maar wordt de X shape gevuld worden met een sequence van noot informatie (voor een bepaald tijdsinterval ti - ti+n-1)
+#            en bevat de Y shape   noot informatie op tijdstip ti+n.
+#
+#
 # Naming conventions: https://visualgit.readthedocs.io/en/latest/pages/naming_convention.html
 # cx1964 20210411
 
